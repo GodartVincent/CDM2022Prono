@@ -1,0 +1,9 @@
+{% if latest_matchs_list %}
+    <ul>
+    {% for matchs in latest_matchs_list %}
+        <li><a href="{% url 'detail' matchs.id %}">{{ matchs }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
