@@ -17,6 +17,9 @@ class Match(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField('date published')
 
+    def getPronoScore1(self, user):
+        return self.matchchoice_set.get(user_id=user).score_1
+
     def __str__(self):
         if self.score_1 != -1 and self.score_2 != -1:
             return self.squad_1 + " " + str(self.score_1) +  " - "+ str(self.score_2) + " " + self.squad_2
