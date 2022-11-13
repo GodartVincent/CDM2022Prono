@@ -1,6 +1,9 @@
+{% extends "base.html" %}{% block content %}
+
 <h1>{{poll.name}}</h1>
 <ul>
   {% for match in poll.match_set.all %}
   <li><a href="{% url 'detailMatch' match.id %}">{{ match }}</a></li>
   {% endfor %}
 </ul>
+{% endblock %}

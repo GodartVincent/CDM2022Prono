@@ -1,4 +1,4 @@
-{% if polls %}
+{% extends "base.html" %}{% block content %} {% if polls %}
 <ul>
   {% for poll in polls %}
   <li><a href="{% url 'detailPoll' poll.id %}">{{ poll }}</a></li>
@@ -6,4 +6,4 @@
 </ul>
 {% else %}
 <p>No polls are available.</p>
-{% endif %}
+{% endif %} {% endblock %}

@@ -1,5 +1,7 @@
+{% extends "base.html" %}{% block content %}
 <h1>{{match}}</h1>
 <p>
   {{ match.squad_1 }} {{ " " }} {{ match.score_1 }} {{ " - " }}
   {{match.score_2}} {{ match.squad_2 }}
 </p>
+{% endblock %}
