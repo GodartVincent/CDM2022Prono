@@ -7,6 +7,7 @@ class Match(models.Model):
     squad_2 = models.CharField(max_length=20)
     score_1 = models.IntegerField(default=0)
     score_2 = models.IntegerField(default=0)
+    played = models.BooleanField(default=False)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):
