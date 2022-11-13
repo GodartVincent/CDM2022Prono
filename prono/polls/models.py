@@ -1,11 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+class Poll(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Match(models.Model):
     squad_1 = models.CharField(max_length=20)
     squad_2 = models.CharField(max_length=20)
     score_1 = models.IntegerField(default=-1)
     score_2 = models.IntegerField(default=-1)
+    played = models.BooleanField(default=False)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):
@@ -31,6 +40,7 @@ class MatchChoice(models.Model):
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return self.question_text
