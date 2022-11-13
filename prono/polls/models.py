@@ -2,12 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat
 
+
+class Poll(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Match(models.Model):
     squad_1 = models.CharField(max_length=20)
     squad_2 = models.CharField(max_length=20)
     score_1 = models.IntegerField(default=0)
     score_2 = models.IntegerField(default=0)
     played = models.BooleanField(default=False)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):

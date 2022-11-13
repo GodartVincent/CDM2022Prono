@@ -1,3 +1,6 @@
-<p>{{match}}</p>
-{{ match.squad_1 }} {{ " " }} {{ match.score_1 }} {{ " - " }} {{match.score_2}}
-{{ " " }} {{ match.squad_2 }}
+<h1>{{poll.name}}</h1>
+<ul>
+  {% for match in poll.match_set.all %}
+  <li><a href="{% url 'detailMatch' match.id %}">{{ match }}</a></li>
+  {% endfor %}
+</ul>
