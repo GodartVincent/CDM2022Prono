@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat
 
-class Matchs(models.Model):
+class Match(models.Model):
     squad_1 = models.CharField(max_length=20)
     squad_2 = models.CharField(max_length=20)
     score_1 = models.IntegerField(default=0)
