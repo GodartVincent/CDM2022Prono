@@ -1,9 +1,18 @@
-{% if latest_matchs_list %}
+{% if latest_match_list %}
     <ul>
-    {% for matchs in latest_matchs_list %}
-        <li><a href="{% url 'detail' matchs.id %}">{{ matchs }}</a></li>
+    {% for match in latest_match_list %}
+        <li>{{ match.squad_1 }} {{ " " }} <input type="number" id="choice{{ match.id }}_1" name="choice" value="{{ match.matchchoice_set.filter }}"></li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No matchs are available.</p>
+{% endif %}
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No questions are available.</p>
 {% endif %}
