@@ -21,8 +21,17 @@ class Match(models.Model):
     def __str__(self):
         return self.squad_1 + " - " + self.squad_2
 
+
+class Pronostic(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    score_1 = models.IntegerField(default=0)
+    score_2 = models.IntegerField(default=0)
+
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField('date published')
     
     def __str__(self):
