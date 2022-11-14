@@ -1,0 +1,22 @@
+li a {
+    color: blue;
+}
+body {
+    background: white url("images/background2.jpg") no-repeat;
+}
+header {
+    color: white;
+    background: rgb(85, 85, 241);
+}
+header a {
+    color: white;
+}
+h1 {
+    color: rgb(110, 102, 102);
+}
+#choice {
+    border-block-color: #32a1ce;
+    font-style: italic;
+    writing-mode: horizontal-tb;
+    text-align: center;
+}

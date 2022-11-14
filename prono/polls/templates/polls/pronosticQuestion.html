@@ -2,27 +2,28 @@
 {% if question.isfilled %}
 
 {% if question.isPronoOver %}
-<li>{{ question.prono }}</li>
+{{ question.prono }}
 {% else %}
 <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
-{% csrf_token %}
-<li><input type="text" name="answer" id="choice{{ question.id }}" value="{{ question.prono }}"> <input type="submit" value="Mettre à jour"></li>
+    {% csrf_token %}
+    <input type="text" name="answer" id="choice" value="{{ question.prono }}"> <input type="submit"
+        value="Mettre à jour">
 </form>
 {% endif %}
 
 {% elif question.isPronoOver %}
-<li>{{ "Pas de pronostic pour cette question" }}</li>
+{{ "Pas de pronostic pour cette question" }}
 
 {% else %}
 <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
-{% csrf_token %}
-<li><input type="text" name="answer" id="choice{{ question.id }}"> <input type="submit" value="Valider"></li>
+    {% csrf_token %}
+    <input type="text" name="answer" id="choice"> <input type="submit" value="Valider">
 </form>
 {% endif %}
 
 {% if question.answer != 'None' %}
 {{ "Résultats : " }} {{ question.answer }}
 {% if question.isfilled %}
-{{ "Nombre de points gagnés : "}}  {{ question.points }}
+{{ "Nombre de points gagnés : "}} {{ question.points }}
 {% endif %}
 {% endif %}

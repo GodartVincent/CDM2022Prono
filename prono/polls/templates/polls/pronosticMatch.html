@@ -1,7 +1,7 @@
 {% if match.isfilled %} {% if match.isPronoOver %}
 <li>
-  {{ match.squad_1 }} {{ " " }} {{ match.prono_1 }} {{ " - " }} {{ match.prono_2
-  }} {{ " " }} {{ match.squad_2 }}
+  {{ match.squad_1 }} {{ " " }} {{ match.prono_1 }} {{ " - " }}
+  {{ match.prono_2 }} {{ " " }} {{ match.squad_2 }}
 </li>
 {% else %}
 <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
@@ -11,14 +11,14 @@
     <input
       type="number"
       name="score"
-      id="choice{{ match.id }}_1"
+      id="choice"
       value="{{ match.prono_1 }}"
     />
     {{ " - " }}
     <input
       type="number"
       name="score"
-      id="choice{{ match.id }}_2"
+      id="choice"
       value="{{ match.prono_2 }}"
     />
     {{ " " }} {{ match.squad_2 }} <input type="submit" value="Mettre à jour" />
@@ -26,8 +26,8 @@
 </form>
 {% endif %} {% elif match.isPronoOver %}
 <li>
-  {{ match.squad_1 }} {{ " - " }} {{ match.squad_2 }} {{ " Pas de pronostic pour
-  ce match" }}
+  {{ match.squad_1 }} {{ " - " }} {{ match.squad_2 }}
+  {{ " Pas de pronostic pour ce match" }}
 </li>
 
 {% else %}
@@ -35,12 +35,12 @@
   {% csrf_token %}
   <li>
     {{ match.squad_1 }} {{ " " }}
-    <input type="number" name="score" id="choice{{ match.id }}_1" /> {{ " - " }}
-    <input type="number" name="score" id="choice{{ match.id }}_2" /> {{ " " }}
+    <input type="number" name="score" id="choice" /> {{ " - " }}
+    <input type="number" name="score" id="choice" /> {{ " " }}
     {{ match.squad_2 }} <input type="submit" value="Valider" />
   </li>
 </form>
 
-{% endif %} {% if match.score_1 >= 0 and match.score_2 >= 0 %} {{ "Résultats : "
-}} {{ match.score_1 }} {{ " - " }} {{ match.score_2 }} {% if match.isfilled %}
+{% endif %} {% if match.score_1 >= 0 and match.score_2 >= 0 %} {{ "Résultats : " }}
+{{ match.score_1 }} {{ " - " }} {{ match.score_2 }} {% if match.isfilled %}
 {{ "Nombre de points gagnés : "}} {{ match.points }} {% endif %} {% endif %}

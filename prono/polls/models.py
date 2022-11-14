@@ -20,8 +20,6 @@ class Match(models.Model):
     pub_date = models.DateTimeField("date published")
 
     def isPronoOver(self):
-        print(self.pub_date)
-        print(timezone.now())
         return self.pub_date - timezone.now() < timedelta(hours=1)
 
     def __str__(self):
@@ -65,8 +63,6 @@ class Question(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
 
     def isPronoOver(self):
-        print(self.pub_date)
-        print(timezone.now())
         return self.pub_date - timezone.now() < timedelta(hours=1)
 
     def __str__(self):

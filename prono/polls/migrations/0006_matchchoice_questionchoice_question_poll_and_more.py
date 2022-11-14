@@ -9,93 +9,61 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("polls", "0005_poll_match_poll"),
+        ('polls', '0005_poll_match_poll'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="MatchChoice",
+            name='MatchChoice',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("score_1", models.IntegerField(default=-1)),
-                ("score_2", models.IntegerField(default=-1)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('score_1', models.IntegerField(default=-1)),
+                ('score_2', models.IntegerField(default=-1)),
             ],
         ),
         migrations.CreateModel(
-            name="QuestionChoice",
+            name='QuestionChoice',
             fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("choice", models.CharField(max_length=30)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('choice', models.CharField(max_length=30)),
             ],
         ),
         migrations.AddField(
-            model_name="question",
-            name="poll",
-            field=models.ForeignKey(
-                null=True, on_delete=django.db.models.deletion.CASCADE, to="polls.poll"
-            ),
+            model_name='question',
+            name='poll',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='polls.poll'),
         ),
         migrations.AlterField(
-            model_name="match",
-            name="score_1",
+            model_name='match',
+            name='score_1',
             field=models.IntegerField(default=-1),
         ),
         migrations.AlterField(
-            model_name="match",
-            name="score_2",
+            model_name='match',
+            name='score_2',
             field=models.IntegerField(default=-1),
         ),
         migrations.DeleteModel(
-            name="Choice",
+            name='Choice',
         ),
         migrations.AddField(
-            model_name="questionchoice",
-            name="question",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="polls.question"
-            ),
+            model_name='questionchoice',
+            name='question',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polls.question'),
         ),
         migrations.AddField(
-            model_name="questionchoice",
-            name="user",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to=settings.AUTH_USER_MODEL,
-            ),
+            model_name='questionchoice',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name="matchchoice",
-            name="match",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="polls.match"
-            ),
+            model_name='matchchoice',
+            name='match',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='polls.match'),
         ),
         migrations.AddField(
-            model_name="matchchoice",
-            name="user",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                to=settings.AUTH_USER_MODEL,
-            ),
+            model_name='matchchoice',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]
