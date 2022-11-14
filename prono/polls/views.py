@@ -1,6 +1,8 @@
-from django.http import HttpResponse
-from .models import Match, Poll
+from .models import Match, MatchChoice, Question, QuestionChoice, Poll
 from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.db.models import Exists, OuterRef
 
 def indexPolls(request):
     polls = Poll.objects.all()
@@ -10,16 +12,67 @@ def indexPolls(request):
 
 def detailPoll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    return render(request, 'polls/detail.html', {'poll': poll})
+    questions = poll.question_set.all().annotate(isfilled=Exists(QuestionChoice.objects.filter(question=OuterRef('pk'), user=request.user)))
+    # TODO Voir si on peut trouver un moyen d'annoter directement avec les score_1 et score_2 pronostiques
+    matchs = poll.match_set.all().annotate(isfilled=Exists(MatchChoice.objects.filter(match=OuterRef('pk'), user=request.user)))#prono1=MatchChoice.objects.get(match=OuterRef('pk'), user=request.user).score_1, prono2=MatchChoice.objects.get(match=OuterRef('pk'), user=request.user).score_2)
+    return render(request, 'polls/detail.html', {'poll': poll, 'matchs' : matchs, 'questions' : questions})
 
 
 def detailMatch(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
     return render(request, 'matchs/detail.html', {'match': match})
 
+
+def pronosticMatch(request, match_id):
+    if request.method == "POST":
+        match = get_object_or_404(Match, pk=match_id)
+        try:
+            matchChoice = match.matchchoice_set.get(user_id=request.user)
+        except (KeyError, MatchChoice.DoesNotExist):
+            matchChoice = match.matchchoice_set.create(user=request.user)
+
+        try:
+            scores = request.POST.getlist("score")
+            matchChoice.score_1 = int(scores[0])
+            matchChoice.score_2 = int(scores[1])
+        except (ValueError):
+            # Redisplay the match pronosticing form.
+            return render(request, 'polls/detail.html', {
+                'match': match,
+                'error_message': "Vous n'avez pas rempli les 2 scores.",
+            })
+        else:
+            matchChoice.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return HttpResponseRedirect(reverse('polls:detailPoll', args=(match.poll.id,)))
+
+
+def pronosticQuestion(request, question_id):
+    if request.method == "POST":
+        question = get_object_or_404(Question, pk=question_id)
+        try:
+            questionChoice = question.questionchoice_set.get(user_id=request.user)
+        except (KeyError, QuestionChoice.DoesNotExist):
+            questionChoice = question.questionchoice_set.create(user=request.user)
+
+        try:
+            questionChoice.choice = request.POST["answer"]
+        except (ValueError):
+            # Redisplay the question pronosticing form.
+            return render(request, 'polls/detail.html', {
+                'question': question,
+                'error_message': "Vous n'avez pas repondu à la question.",
+            })
+        else:
+            questionChoice.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return HttpResponseRedirect(reverse('polls:detailPoll', args=(question.poll.id,)))
+
 # def results(_, match_id):
 #     response = "Vous regardez les résultats du match %s."
 #     return HttpResponse(response % match_id)
 
-# def vote(_, match_id):
-#     return HttpResponse("Vous pronostiquez le match %s." % match_id)

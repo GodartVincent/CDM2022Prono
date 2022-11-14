@@ -1,0 +1,16 @@
+<li>{{ question }}</li>
+{% if question.isfilled %}
+{% for questionchoice in question.questionchoice_set.all %}
+{% if questionchoice.user == user %}
+<form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
+{% csrf_token %}
+<li><input type="text" name="answer" id="choice{{ question.id }}" value="{{ questionchoice.choice }}"> <input type="submit" value="Mettre à jour"></li>
+</form>
+{% endif %}
+{% endfor %}
+{% else %}
+<form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
+{% csrf_token %}
+<li><input type="text" name="answer" id="choice{{ question.id }}"> <input type="submit" value="Valider"></li>
+</form>
+{% endif %}

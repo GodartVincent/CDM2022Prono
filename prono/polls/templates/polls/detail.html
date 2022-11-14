@@ -2,8 +2,14 @@
 
 <h1>{{poll.name}}</h1>
 <ul>
-  {% for match in poll.match_set.all %}
-  <li><a href="{% url 'detailMatch' match.id %}">{{ match }}</a></li>
+  {% for match in matchs %}
+  {% include 'polls/pronosticMatch.html' %}
+  {% endfor %}
+</ul>
+
+<ul>
+  {% for question in questions %}
+  {% include 'polls/pronosticQuestion.html' %}
   {% endfor %}
 </ul>
 {% endblock %}
