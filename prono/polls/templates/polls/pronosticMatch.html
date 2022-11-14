@@ -1,28 +1,46 @@
-{% if match.isfilled %}
-
-{% if match.isPronoOver %}
-<li>{{ match.squad_1 }} {{ " " }} {{ match.prono_1 }}  {{ " - " }} {{ match.prono_2 }} {{ " " }} {{ match.squad_2 }}</li>
+{% if match.isfilled %} {% if match.isPronoOver %}
+<li>
+  {{ match.squad_1 }} {{ " " }} {{ match.prono_1 }} {{ " - " }} {{ match.prono_2
+  }} {{ " " }} {{ match.squad_2 }}
+</li>
 {% else %}
 <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
-{% csrf_token %}
-<li>{{ match.squad_1 }} {{ " " }} <input type="number" name="score" id="choice{{ match.id }}_1" value="{{ match.prono_1 }}">  {{ " - " }} <input type="number" name="score" id="choice{{ match.id }}_2" value="{{ match.prono_2 }}"> {{ " " }} {{ match.squad_2 }} <input type="submit" value="Mettre à jour"></li>
+  {% csrf_token %}
+  <li>
+    {{ match.squad_1 }} {{ " " }}
+    <input
+      type="number"
+      name="score"
+      id="choice{{ match.id }}_1"
+      value="{{ match.prono_1 }}"
+    />
+    {{ " - " }}
+    <input
+      type="number"
+      name="score"
+      id="choice{{ match.id }}_2"
+      value="{{ match.prono_2 }}"
+    />
+    {{ " " }} {{ match.squad_2 }} <input type="submit" value="Mettre à jour" />
+  </li>
 </form>
-{% endif %}
-
-{% elif match.isPronoOver %}
-<li>{{ match.squad_1 }} {{ " - " }} {{ match.squad_2 }} {{ " Pas de pronostic pour ce match" }}</li>
+{% endif %} {% elif match.isPronoOver %}
+<li>
+  {{ match.squad_1 }} {{ " - " }} {{ match.squad_2 }} {{ " Pas de pronostic pour
+  ce match" }}
+</li>
 
 {% else %}
 <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
-{% csrf_token %}
-<li>{{ match.squad_1 }} {{ " " }} <input type="number" name="score" id="choice{{ match.id }}_1">  {{ " - " }} <input type="number" name="score" id="choice{{ match.id }}_2"> {{ " " }} {{ match.squad_2 }} <input type="submit" value="Valider"></li>
+  {% csrf_token %}
+  <li>
+    {{ match.squad_1 }} {{ " " }}
+    <input type="number" name="score" id="choice{{ match.id }}_1" /> {{ " - " }}
+    <input type="number" name="score" id="choice{{ match.id }}_2" /> {{ " " }}
+    {{ match.squad_2 }} <input type="submit" value="Valider" />
+  </li>
 </form>
 
-{% endif %}
-
-{% if match.score_1 >= 0 and match.score_2 >= 0 %}
-{{ "Résultats : " }} {{ match.score_1 }}  {{ " - " }} {{ match.score_2 }}
-{% if match.isfilled %}
-{{ "Nombre de points gagnés : "}}  {{ match.points }}
-{% endif %}
-{% endif %}
+{% endif %} {% if match.score_1 >= 0 and match.score_2 >= 0 %} {{ "Résultats : "
+}} {{ match.score_1 }} {{ " - " }} {{ match.score_2 }} {% if match.isfilled %}
+{{ "Nombre de points gagnés : "}} {{ match.points }} {% endif %} {% endif %}
