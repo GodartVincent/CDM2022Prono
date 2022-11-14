@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Poll(models.Model):
@@ -9,16 +11,17 @@ class Poll(models.Model):
         return self.name
 
 class Match(models.Model):
-    squad_1 = models.CharField(max_length=20)
-    squad_2 = models.CharField(max_length=20)
-    score_1 = models.IntegerField(default=-1)
-    score_2 = models.IntegerField(default=-1)
-    played = models.BooleanField(default=False)
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
+    squad_1  = models.CharField(max_length=20)
+    squad_2  = models.CharField(max_length=20)
+    score_1  = models.IntegerField(default=-1)
+    score_2  = models.IntegerField(default=-1)
+    poll     = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField('date published')
 
-    def getPronoScore1(self, user):
-        return self.matchchoice_set.get(user_id=user).score_1
+    def isPronoOver(self):
+        print(self.pub_date)
+        print(timezone.now())
+        return self.pub_date - timezone.now() < timedelta(hours=1)
 
     def __str__(self):
         if self.score_1 != -1 and self.score_2 != -1:
@@ -31,6 +34,7 @@ class MatchChoice(models.Model):
     match   = models.ForeignKey(Match, on_delete=models.CASCADE)
     score_1 = models.IntegerField(default=-1)
     score_2 = models.IntegerField(default=-1)
+    points  = models.IntegerField(default=0)
     user    = models.ForeignKey(User, on_delete = models.CASCADE, blank = True, null = True)
     
     def __str__(self):
@@ -42,8 +46,14 @@ class MatchChoice(models.Model):
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
+    answer        = models.CharField(max_length=200, default='None')
+    pub_date      = models.DateTimeField('date published')
+    poll          = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
+
+    def isPronoOver(self):
+        print(self.pub_date)
+        print(timezone.now())
+        return self.pub_date - timezone.now() < timedelta(hours=1)
     
     def __str__(self):
         return self.question_text
@@ -52,6 +62,7 @@ class Question(models.Model):
 class QuestionChoice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice   = models.CharField(max_length=30)
+    points   = models.IntegerField(default=0)
     user     = models.ForeignKey(User, on_delete = models.CASCADE, blank = True, null = True)
     
     def __str__(self):

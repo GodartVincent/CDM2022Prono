@@ -12,9 +12,10 @@ def indexPolls(request):
 
 def detailPoll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-    questions = poll.question_set.all().annotate(isfilled=Exists(QuestionChoice.objects.filter(question=OuterRef('pk'), user=request.user)))
-    # TODO Voir si on peut trouver un moyen d'annoter directement avec les score_1 et score_2 pronostiques
-    matchs = poll.match_set.all().annotate(isfilled=Exists(MatchChoice.objects.filter(match=OuterRef('pk'), user=request.user)))#prono1=MatchChoice.objects.get(match=OuterRef('pk'), user=request.user).score_1, prono2=MatchChoice.objects.get(match=OuterRef('pk'), user=request.user).score_2)
+    subquery = QuestionChoice.objects.filter(question=OuterRef('pk'), user=request.user)
+    questions = poll.question_set.all().annotate(isfilled=Exists(subquery), prono=subquery.values("choice"), points=subquery.values("points"))
+    subquery = MatchChoice.objects.filter(match=OuterRef('pk'), user=request.user)
+    matchs = poll.match_set.all().annotate(isfilled=Exists(MatchChoice.objects.filter(match=OuterRef('pk'), user=request.user)), prono_1=subquery.values("score_1"), prono_2=subquery.values("score_2"), points=subquery.values("points"))
     return render(request, 'polls/detail.html', {'poll': poll, 'matchs' : matchs, 'questions' : questions})
 
 
@@ -26,6 +27,12 @@ def detailMatch(request, match_id):
 def pronosticMatch(request, match_id):
     if request.method == "POST":
         match = get_object_or_404(Match, pk=match_id)
+        if match.isPronoOver():
+            # Redisplay the match pronosticing form.
+            return render(request, 'polls/detail.html', {
+                'match': match,
+                'error_message': "Il est trop tard pour pronostiquer sur ce match.",
+            })
         try:
             matchChoice = match.matchchoice_set.get(user_id=request.user)
         except (KeyError, MatchChoice.DoesNotExist):
@@ -52,6 +59,12 @@ def pronosticMatch(request, match_id):
 def pronosticQuestion(request, question_id):
     if request.method == "POST":
         question = get_object_or_404(Question, pk=question_id)
+        if question.isPronoOver():
+            # Redisplay the match pronosticing form.
+            return render(request, 'polls/detail.html', {
+                'question': question,
+                'error_message': "Il est trop tard pour pronostiquer sur cette question.",
+            })
         try:
             questionChoice = question.questionchoice_set.get(user_id=request.user)
         except (KeyError, QuestionChoice.DoesNotExist):
