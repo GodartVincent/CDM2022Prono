@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% block content %} {% if polls %}
+{% extends "index.html" %}{% block content %} {% if polls %}
 <ul>
   {% for poll in polls %}
   <li><a href="{% url 'polls:detailPoll' poll.id %}">{{ poll }}</a></li>
