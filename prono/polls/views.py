@@ -7,8 +7,8 @@ from django.db.models import Exists, OuterRef
 
 def indexPolls(request):
     polls = Poll.objects.all()
-    context = {'polls': polls}
-    return render(request, 'polls/indexDetail.html', context)
+    context = {"polls": polls}
+    return render(request, "polls/indexPolls.html", context)
 
 
 def detailPoll(request, poll_id):
@@ -30,7 +30,7 @@ def detailPoll(request, poll_id):
     )
     return render(
         request,
-        "polls/detail.html",
+        "polls/detailPoll.html",
         {"poll": poll, "matchs": matchs, "questions": questions},
     )
 

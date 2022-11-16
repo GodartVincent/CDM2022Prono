@@ -76,12 +76,21 @@ select {
 /* ==================================================== */
 /* ==================================================== */
 
+:root {
+  --main-bg-color: #6c1d45;
+}
+
 html {
   font-family: Lato;
 }
 
+a {
+  color: black;
+}
+
 .header {
-  background-color: #ba768a;
+  background-color: var(--main-bg-color);
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -91,8 +100,16 @@ html {
   height: 5rem;
 }
 
+.header__link {
+  color: white;
+}
+
 .header__title {
   font-size: 2rem;
+}
+
+.header__name {
+  font-weight: bold;
 }
 
 .content {
@@ -101,9 +118,6 @@ html {
   margin: auto;
 }
 
-h1 {
-  color: rgb(110, 102, 102);
-}
 #choice {
   border-block-color: #32a1ce;
   font-style: italic;

@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Lato&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <title>Pronostics CDM 2022</title>
@@ -16,11 +16,12 @@
     <div></div>
     <div class="header__title">Pronostics Coupe du Monde 2022</div>
     <div class="header__item">
-      {% if user.is_authenticated %} Hi {{ user.username }}!
-      <p><a href="{% url 'logout' %}">Log Out</a></p>
+      {% if user.is_authenticated %} Hi
+      <span class="header__name">{{ user.username }}!</span>
+      <p><a class="header__link" href="{% url 'logout' %}">Log Out</a></p>
       {% else %}
       <p>You are not logged in</p>
-      <a href="{% url 'login' %}">Log In</a>
+      <a class="header__link" href="{% url 'login' %}">Log In</a>
       {% endif %}
     </div>
   </header>
