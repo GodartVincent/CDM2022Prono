@@ -1,29 +1,51 @@
-<li>{{ question }}</li>
+<div class="question">
+<div class="questionStr">
+    {{ question }}
+</div>
 {% if question.isfilled %}
 
 {% if question.isPronoOver %}
-{{ question.prono }}
+<div class="questionInput">
+    {{ question.prono }}
+</div>
+<div class="submitButton"></div>
 {% else %}
-<form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="answer" id="choice" value="{{ question.prono }}"> <input type="submit"
-        value="Mettre à jour">
-</form>
+    <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
+        {% csrf_token %}
+        <div class="questionInput">
+            <input type="text" name="answer" id="questionChoice" value="{{ question.prono }}">
+        </div>
+        <div class="submitButton">
+            <input type="submit" value="Mettre à jour">
+        </div>
+    </form>
 {% endif %}
 
 {% elif question.isPronoOver %}
-{{ "Pas de pronostic pour cette question" }}
+<div class="questionInput">
+</div>
 
 {% else %}
+
 <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
     {% csrf_token %}
-    <input type="text" name="answer" id="choice"> <input type="submit" value="Valider">
+    <div class="questionInput">
+        <input type="text" name="answer" id="questionChoice">
+    </div>
+    <div class="submitButton">
+        <input type="submit" value="Valider">
+    </div>
 </form>
 {% endif %}
 
 {% if question.answer != 'None' %}
-{{ "Résultats : " }} {{ question.answer }}
+<div class="questionResult">
+{{ "Réponse : " }} {{ question.answer }}
+</div>
 {% if question.isfilled %}
-{{ "Nombre de points gagnés : "}} {{ question.points }}
+<div class="points">
+{{ "Point(s) : "}} {{ question.points }}
+</div>
 {% endif %}
 {% endif %}
+</div>

@@ -1,14 +1,20 @@
 {% extends "index.html" %}{% block content %}
 <h1>{{poll.name}}</h1>
-<ul>
-  {% for match in matchs %}
-  {% include 'polls/pronosticMatch.html' %}
-  {% endfor %}
-</ul>
+<h2>{{"Matchs"}}</h2>
+<div class='matchContainer'>
+  <ul>
+    {% for match in matchs %}
+    {% include 'polls/pronosticMatch.html' %}
+    {% endfor %}
+  </ul>
+</div>
 
+<h2>{{"Questions"}}</h2>
+<div class='questionContainer'>
 <ul>
   {% for question in questions %}
   {% include 'polls/pronosticQuestion.html' %}
   {% endfor %}
 </ul>
+</div>
 {% endblock %}

@@ -82,6 +82,7 @@ select {
 
 html {
   font-family: Lato;
+  background: radial-gradient(#ffffff, #fcfcfc);
 }
 
 a {
@@ -96,7 +97,6 @@ a {
   align-items: center;
   padding: 1rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  margin-bottom: 2rem;
   height: 5rem;
 }
 
@@ -112,15 +112,124 @@ a {
   font-weight: bold;
 }
 
+h2 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 22px;
+}
+
 .content {
   width: 100%;
   max-width: 800px;
   margin: auto;
+  padding-top: 2rem;
+}
+
+.matchContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.match {
+  height: 95px;
+  font-weight: bold;
+}
+
+.result {
+  height : 40px;
+  padding-top: 0.4em;
+  font-weight: normal;
+  font-style: italic;
+  color : green;
+}
+
+.matchSquad1 {
+  display: inline-block;
+  width: 160px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.opposing {
+  display: inline-block;
+  width: 8px;
+  text-align: center;
+}
+
+.matchSquad2 {
+  display: inline-block;
+  width: 160px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.submitButton {
+  display: inline-block;
+  width: 110px;
+  text-align: center;
 }
 
 #choice {
   border-block-color: #32a1ce;
   font-style: italic;
-  text-align: center;
   writing-mode: horizontal-tb;
+  text-align: center;
+  border-width: 4px;
+  width : 130px;
+}
+
+.matchInput {
+  display: inline-block;
+  width: 150px;
+  text-align: center;
+}
+
+.questionContainer {
+  font-weight: bold;
+}
+
+.question {
+  padding-top: 15px;
+  height: 120px;
+  font-weight: bold;
+}
+
+.questionStr {
+  font-size: 1.2em;
+  height: 40px;
+}
+
+.questionInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  display: inline-block;
+  text-align: left;
+  width : 643.5px;
+}
+
+#questionChoice {
+  border-block-color: #32a1ce;
+  font-style: italic;
+  writing-mode: horizontal-tb;
+  border-width: 4px;
+  width : 630px;
+}
+
+.questionResult {
+  display: inline-block;
+  font-weight: normal;
+  font-style: italic;
+  width : 180px;
+  color : green;
+}
+
+.points {
+  display: inline-block;
+  font-weight: bold;
+  font-style: italic;
+  text-align: center;
+  width : 160px;
+  color : green;
 }
