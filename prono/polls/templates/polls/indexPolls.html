@@ -1,4 +1,6 @@
 {% extends "index.html" %}{% block content %} {% if polls %}
+
+{% if user.is_authenticated %}
 <h2>Questionnaires</h2>
 <ul>
   {% for poll in polls %}
@@ -7,4 +9,11 @@
 </ul>
 {% else %}
 <p>No polls are available.</p>
-{% endif %} {% endblock %}
+{% endif %}
+{% else %}
+<ul>
+  You are not logged in
+  <a href="{% url 'login' %}">Log In</a>
+</ul>
+{% endif %}
+{% endblock %}

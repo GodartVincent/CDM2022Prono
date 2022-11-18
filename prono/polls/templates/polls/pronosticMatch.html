@@ -29,6 +29,7 @@
           name="score"
           id="choice"
           value="{{ match.prono_1 }}"
+          required
         />
       </div>
       <div class="opposing">
@@ -40,6 +41,7 @@
           name="score"
           id="choice"
           value="{{ match.prono_2 }}"
+          required
         />
       </div>
       <div class="matchSquad2">
@@ -74,13 +76,13 @@
         {{ match.squad_1 }}
       </div>
       <div class="matchInput">
-        <input type="number" name="score" id="choice" />
+        <input type="number" name="score" id="choice" required/>
       </div>
       <div class="opposing">
         {{" - " }}
       </div>
       <div class="matchInput">
-        <input type="number" name="score" id="choice" />
+        <input type="number" name="score" id="choice" required />
       </div>
       <div class="matchSquad2">
         {{ match.squad_2 }}

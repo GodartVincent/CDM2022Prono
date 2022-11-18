@@ -13,7 +13,7 @@
     <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
         {% csrf_token %}
         <div class="questionInput">
-            <input type="text" name="answer" id="questionChoice" value="{{ question.prono }}">
+            <input type="text" name="answer" id="questionChoice" value="{{ question.prono }}" required>
         </div>
         <div class="submitButton">
             <input type="submit" value="Mettre à jour">
@@ -30,7 +30,7 @@
 <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
     {% csrf_token %}
     <div class="questionInput">
-        <input type="text" name="answer" id="questionChoice">
+        <input type="text" name="answer" id="questionChoice" required>
     </div>
     <div class="submitButton">
         <input type="submit" value="Valider">

@@ -77,3 +77,44 @@ class QuestionChoice(models.Model):
 
     def __str__(self):
         return self.choice
+
+
+class Group(models.Model):
+    group_name = models.CharField(max_length=30)
+    squad_1 = models.CharField(max_length=20)
+    squad_2 = models.CharField(max_length=20)
+    squad_3 = models.CharField(max_length=20)
+    squad_4 = models.CharField(max_length=20)
+
+    rank_1 = models.IntegerField(default=-1)
+    rank_2 = models.IntegerField(default=-1)
+    rank_3 = models.IntegerField(default=-1)
+    rank_4 = models.IntegerField(default=-1)
+
+    pub_date = models.DateTimeField("date published")
+
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
+
+    def isPronoOver(self):
+        return self.pub_date - timezone.now() < timedelta(hours=1)
+
+    def __str__(self):
+        return self.group_name
+
+
+class GroupChoice(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+    rank_1 = models.IntegerField(default=-1)
+    rank_2 = models.IntegerField(default=-1)
+    rank_3 = models.IntegerField(default=-1)
+    rank_4 = models.IntegerField(default=-1)
+
+    points = models.IntegerField(default=0)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        if self.rank_1 != -1 and self.rank_2 != -1 and self.rank_3 != -1 and self.rank_4 != -1:
+            return str(self.rank_1) + ", " + str(self.rank_2) + ", " + str(self.rank_3) + ", " + str(self.rank_4)
+        return "Pas encore pronostiqué."

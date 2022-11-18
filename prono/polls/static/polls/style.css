@@ -234,3 +234,57 @@ h2 {
   width : 160px;
   color : green;
 }
+
+.groupContainer {
+  font-weight: bold;
+}
+
+.group {
+  height: 220px;
+  padding-left: 5%;
+}
+
+.groupStr {
+  font-size: 1.2em;
+  height: 30px;
+}
+
+.groupSquad {
+  display: inline-block;
+  width: 200px;
+  height: 34px;
+  font-size: 1.2em;
+  text-align: center;
+  border: solid;
+  border-color: black;
+  border-width: 1.474px;
+  margin-right: -3px;
+  margin-bottom: -1px;
+}
+
+.groupInput {
+  display: inline-block;
+  width: 80px;
+  height: 34px;
+  text-align: center;
+  margin-left: -3px;
+  margin-bottom: -1px;
+}
+
+#groupChoice {
+  border-block-color: #32a1ce;
+  font-style: italic;
+  writing-mode: horizontal-tb;
+  text-align: center;
+  border-width: 4px;
+  width : 80px;
+  height: 34px;
+}
+
+.groupResult {
+  display: inline-block;
+  font-weight: normal;
+  font-style: italic;
+  width : 180px;
+  color : green;
+}
