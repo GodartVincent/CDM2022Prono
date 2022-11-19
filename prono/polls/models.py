@@ -20,7 +20,7 @@ class Match(models.Model):
     pub_date = models.DateTimeField("date published")
 
     def isPronoOver(self):
-        return self.pub_date - timezone.now() < timedelta(hours=1)
+        return self.pub_date - timezone.now() < timedelta(minutes=10)
 
     def __str__(self):
         if self.score_1 != -1 and self.score_2 != -1:
@@ -63,7 +63,7 @@ class Question(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
 
     def isPronoOver(self):
-        return self.pub_date - timezone.now() < timedelta(hours=1)
+        return self.pub_date - timezone.now() < timedelta(minutes=10)
 
     def __str__(self):
         return self.question_text
@@ -96,7 +96,7 @@ class Group(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
 
     def isPronoOver(self):
-        return self.pub_date - timezone.now() < timedelta(hours=1)
+        return self.pub_date - timezone.now() < timedelta(minutes=10)
 
     def __str__(self):
         return self.group_name

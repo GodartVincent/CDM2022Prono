@@ -65,14 +65,7 @@ def pronosticMatch(request, match_id):
         match = get_object_or_404(Match, pk=match_id)
         if match.isPronoOver():
             # Redisplay the match pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "match": match,
-                    "error_message": "Il est trop tard pour pronostiquer sur ce match.",
-                },
-            )
+            return detailPoll(request, match.poll.pk)
         try:
             matchChoice = match.matchchoice_set.get(user_id=request.user)
         except (KeyError, MatchChoice.DoesNotExist):
@@ -84,14 +77,7 @@ def pronosticMatch(request, match_id):
             matchChoice.score_2 = int(scores[1])
         except (ValueError):
             # Redisplay the match pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "match": match,
-                    "error_message": "Vous n'avez pas rempli les 2 scores.",
-                },
-            )
+            return detailPoll(request, match.poll.pk)
         else:
             matchChoice.save()
             # Always return an HttpResponseRedirect after successfully dealing
@@ -106,14 +92,7 @@ def pronosticQuestion(request, question_id):
         question = get_object_or_404(Question, pk=question_id)
         if question.isPronoOver():
             # Redisplay the match pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "question": question,
-                    "error_message": "Il est trop tard pour pronostiquer sur cette question.",
-                },
-            )
+            return detailPoll(request, question.poll.pk)
         try:
             questionChoice = question.questionchoice_set.get(user_id=request.user)
         except (KeyError, QuestionChoice.DoesNotExist):
@@ -123,14 +102,7 @@ def pronosticQuestion(request, question_id):
             questionChoice.choice = request.POST["answer"]
         except (ValueError):
             # Redisplay the question pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "question": question,
-                    "error_message": "Vous n'avez pas repondu à la question.",
-                },
-            )
+            return detailPoll(request, question.poll.pk)
         else:
             questionChoice.save()
             # Always return an HttpResponseRedirect after successfully dealing
@@ -144,14 +116,7 @@ def pronosticGroup(request, group_id):
         group = get_object_or_404(Group, pk=group_id)
         if group.isPronoOver():
             # Redisplay the match pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "group": group,
-                    "error_message": "Il est trop tard pour pronostiquer sur ce group.",
-                },
-            )
+            return detailPoll(request, group.poll.pk)
         try:
             groupChoice = group.groupchoice_set.get(user_id=request.user)
         except (KeyError, GroupChoice.DoesNotExist):
@@ -165,14 +130,7 @@ def pronosticGroup(request, group_id):
             groupChoice.rank_4 = int(ranks[3])
         except (ValueError):
             # Redisplay the group pronosticing form.
-            return render(
-                request,
-                "polls/detail.html",
-                {
-                    "group": group,
-                    "error_message": "Vous n'avez pas rempli les 4 rangs.",
-                },
-            )
+            return detailPoll(request, group.poll.pk)
         else:
             groupChoice.save()
             # Always return an HttpResponseRedirect after successfully dealing
