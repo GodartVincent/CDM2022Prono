@@ -175,9 +175,18 @@ a {
   margin-bottom: 1.5rem;
 }
 
+.poll__point_definition {
+  font-weight: 650;
+  font-size: 1.07em;
+  height: 55px;
+}
+
 .poll__name {
   font-weight: 700;
   font-size: 1.75rem;
+}
+.poll__link {
+  color: blue;
 }
 
 .poll__title {

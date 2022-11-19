@@ -8,6 +8,9 @@
         <i class="fa-solid fa-futbol poll__icon"></i>
         <h2 class="poll__title-text">{{"Matchs"}}</h2>
       </div>
+      <div class="poll__point_definition">
+        {{"Score exact : 5 points, bonne différence de buts : 3 points, bon vainqueur : 2 points."}}
+      </div>
       <div class='matchs'>
         {% for match in matchs %}
           {% include 'polls/pronosticMatch.html' %}
@@ -21,6 +24,9 @@
         <i class="fa-solid fa-ranking-star poll__icon"></i>
         <h2 class="poll__title-text">{{"Classements"}}</h2>
       </div>
+      <div class="poll__point_definition">
+        {{"5 points moins la "}} <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a> {{ " entre le pronostic et la vérité."}}
+      </div>
       <div class='groups'>
         {% for group in groups %}
           {% include 'polls/pronosticGroup.html' %}
@@ -32,6 +38,9 @@
       <div class="poll__title">
         <i class="fa-solid fa-circle-question poll__icon"></i>
         <h2 class="poll__title-text">{{"Questions"}}</h2>
+      </div>
+      <div class="poll__point_definition">
+        {{"Les questions ne concernent que la "}}{{poll.name}}{{". Le nombre de points remportés dépend de la question."}}
       </div>
       <div class='questions'>
         {% for question in questions %}

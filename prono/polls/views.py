@@ -97,8 +97,8 @@ def pronosticMatch(request, match_id):
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.
-            return HttpResponseRedirect(f"/poll/{match.poll.pk}/#match_{match.pk}")
-            # return HttpResponse('<script>history.back();</script>')
+            #return HttpResponseRedirect(f"/poll/{match.poll.pk}/#match_{match.pk}")
+            return HttpResponse('<script>history.back();</script>')
 
 
 def pronosticQuestion(request, question_id):
