@@ -1,4 +1,4 @@
-<div class="match">
+<div class="match" id="match_{{match.id}}">
   {% if match.isPronoOver %}
     <div class="match__teams">
       <div class="match__team">
@@ -57,21 +57,22 @@
           <div class="match__team-name">
             {{ match.squad_2 }}
           </div>
-        </div> <div class="submitbutton">
-        <button type="submit" class="button">
-          {% if match.isfilled %}Mettre à jour
-          {% else %}
-            Valider
-          {% endif %}
-        </button>
+        </div>
+        <div class="submitbutton">
+          <button type="submit" class="button">
+            {% if match.isfilled %}Mettre à jour
+            {% else %}
+              Valider
+            {% endif %}
+          </button>
+        </div>
+      </form>
+    {% endif %}
+    {% if match.score_1 >= 0 and match.score_2 >= 0 %}
+      <div class="match__points">
+        {{ "Point(s) : "}}
+        {{ match.points }}
       </div>
-    </form>
-  {% endif %}
-  {% if match.score_1 >= 0 and match.score_2 >= 0 %}
-    <div class="match__points">
-      {{ "Point(s) : "}}
-      {{ match.points }}
-    </div>
-  {% endif %}
+    {% endif %}
 
-</div>
+  </div>
