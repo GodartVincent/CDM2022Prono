@@ -5,17 +5,26 @@ from .models import Poll, Match, MatchChoice, Question, QuestionChoice, Group, G
 class MatchAdmin(admin.ModelAdmin):
     list_display = ('squad_1', 'squad_2', 'score_1', 'score_2', 'pub_date')
 
+class MatchChoiceAdmin(admin.ModelAdmin):
+    list_display = ('score_1', 'score_2', 'points', 'user')
+
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('question_text', 'answer', 'pub_date')
+
+class QuestionChoiceAdmin(admin.ModelAdmin):
+    list_display = ('choice', 'points', 'user', 'question')
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('group_name', 'rank_1', 'pub_date')
 
+class GroupChoiceAdmin(admin.ModelAdmin):
+    list_display = ('group', 'points', 'user')
+
 
 admin.site.register(Poll)
 admin.site.register(Match, MatchAdmin)
-admin.site.register(MatchChoice)
+admin.site.register(MatchChoice, MatchChoiceAdmin)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(QuestionChoice)
+admin.site.register(QuestionChoice, QuestionChoiceAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(GroupChoice)
+admin.site.register(GroupChoice, GroupChoiceAdmin)
