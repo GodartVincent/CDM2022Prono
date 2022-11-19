@@ -1,30 +1,47 @@
 {% extends "index.html" %}
 {% block content %}
-  <h1>{{poll.name}}</h1>
-  <h2>{{"Questions"}}</h2>
-  <div class='questionContainer'>
-    <ul>
-      {% for question in questions %}
-        {% include 'polls/pronosticQuestion.html' %}
-      {% endfor %}
-    </ul>
-  </div>
+  <div class="poll">
+    <h1 class="poll__name">{{poll.name}}</h1>
 
-  <h2>{{"Classements"}}</h2>
-  <div class='groupContainer'>
-    <ul>
-      {% for group in groups %}
-        {% include 'polls/pronosticGroup.html' %}
-      {% endfor %}
-    </ul>
-  </div>
+    <div class="poll__section poll__section--not-last">
+      <div class="poll__title">
+        <i class="fa-solid fa-circle-question poll__icon"></i>
+        <h2 class="poll__title-text">{{"Questions"}}</h2>
+      </div>
+      <div class='questions'>
+        {% for question in questions %}
+          {% include 'polls/pronosticQuestion.html' %}
+        {% endfor %}
+      </div>
 
-  <h2>{{"Matchs"}}</h2>
-  <div class='matchContainer'>
-    <ul>
-      {% for match in matchs %}
-        {% include 'polls/pronosticMatch.html' %}
-      {% endfor %}
-    </ul>
-  </div>
-{% endblock %}
+    </div>
+
+    <div class="poll__section poll__section--not-last">
+      <div class="poll__title">
+        <i class="fa-solid fa-ranking-star poll__icon"></i>
+        <h2 class="poll__title-text">{{"Classements"}}</h2>
+      </div>
+      <div class='groups'>
+        <ul>
+          {% for group in groups %}
+            {% include 'polls/pronosticGroup.html' %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="poll__section">
+      <div class="poll__title">
+        <i class="fa-solid fa-futbol poll__icon"></i>
+        <h2 class="poll__title-text">{{"Matchs"}}</h2>
+      </div>
+      <div class='matchs'>
+        <ul>
+          {% for match in matchs %}
+            {% include 'polls/pronosticMatch.html' %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div {% endblock %}

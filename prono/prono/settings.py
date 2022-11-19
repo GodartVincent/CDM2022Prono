@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "polls.apps.PollsConfig",
     "accounts",
     "livereload",
+    'fontawesomefree'
 ]
 
 MIDDLEWARE = [
