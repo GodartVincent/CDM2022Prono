@@ -213,6 +213,12 @@ a {
 /* ==================================================== */
 /* ==================================================== */
 
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .questions {
   display: flex;
   flex-direction: column;
@@ -320,7 +326,8 @@ a {
 
 .match__team-name {
   font-size: 1.125em;
-  width : 100px;
+  width : 150px;
+  text-align: center;
 }
 
 .match__score {

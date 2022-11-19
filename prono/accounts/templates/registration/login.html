@@ -1,8 +1,10 @@
 {% extends "index.html" %}{% block content %}
 
-<h2>Log In</h2>
+<div class="title">Log In</div>
 <form method="post">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit">Log In</button>
 </form>
+<p>
+<p>Vous n'avez pas encore créé de compte ? <a href="{% url 'register' %}">S'enregistrer</a></p> </p>
 {% endblock %}

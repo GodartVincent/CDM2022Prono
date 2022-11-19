@@ -22,14 +22,14 @@
     <div class="header__title">Pronostics Coupe du Monde 2022</div>
     <div class="header__item">
       {% if user.is_authenticated %}
-        Hi
+        Bonjour
         <span class="header__name">{{ user.username }}!</span>
         <p>
-          <a class="header__link" href="{% url 'logout' %}">Log Out</a>
+          <a class="header__link" href="{% url 'logout' %}">Se déconnecter</a>
         </p>
       {% else %}
-        <p>You are not logged in</p>
-        <a class="header__link" href="{% url 'login' %}">Log In</a>
+        <p>Vous n'êtes pas connecté :</p>
+        <a class="header__link" href="{% url 'login' %}">Se connecter</a>
       {% endif %}
     </div>
   </header>

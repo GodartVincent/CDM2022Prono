@@ -2,7 +2,7 @@
 {% block content %}
   {% if user.is_authenticated %}
     {% if polls %}
-      <h2>Questionnaires</h2>
+    <div class="title">Questionnaires</div>
       <ul>
         {% for poll in polls %}
           <li>
@@ -15,8 +15,10 @@
     {% endif %}
   {% else %}
     <ul>
-      You are not logged in
-      <a href="{% url 'login' %}">Log In</a>
+      <p>Vous n'êtes pas connecté :
+      <a href="{% url 'login' %}">Se connecter</a></p>
+      <p>Si vous n'avez pas encore créé de compte :
+      <a href="{% url 'register' %}">S'enregistrer</a></p>
     </ul>
   {% endif %}
 {% endblock %}
