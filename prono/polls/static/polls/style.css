@@ -268,6 +268,7 @@ a {
   font-size: 1.125em;
   text-align: center;
   border: 1px solid var(--main-text-color);
+  background-color: var(--main-bg-color-100);
 }
 
 .group__form {
@@ -282,7 +283,7 @@ a {
   justify-content: center;
 }
 
-.groupResult {
+.group__result {
   display: inline-block;
   font-weight: normal;
   font-style: italic;
@@ -293,62 +294,44 @@ a {
 /* ==================================================== */
 /* ==================================================== */
 
-/* h2 {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-left: 22px;
-} */
-
-.match {
-  height: 95px;
-  font-weight: bold;
+.matchs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.result {
-  height: 40px;
-  padding-top: 0.4em;
-  font-weight: normal;
+.match {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.match__teams {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.match__team {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.match__team-name {
+  font-size: 1.125em;
+}
+
+.match__score-input {
+  max-width: 80px;
+}
+
+.match__result {
   font-style: italic;
   color: green;
 }
 
-.matchSquad1 {
-  display: inline-block;
-  width: 160px;
-  font-size: 1.2em;
-  text-align: center;
-}
-
-.opposing {
-  display: inline-block;
-  width: 8px;
-  text-align: center;
-}
-
-.matchSquad2 {
-  display: inline-block;
-  width: 160px;
-  font-size: 1.2em;
-  text-align: center;
-}
-
-.submitButton {
-  display: inline-block;
-  width: 110px;
-  text-align: center;
-}
-
-#choice {
-  border-block-color: #32a1ce;
+.match__points {
   font-style: italic;
-  writing-mode: horizontal-tb;
-  text-align: center;
-  border-width: 4px;
-  width: 130px;
-}
-
-.matchInput {
-  display: inline-block;
-  width: 150px;
-  text-align: center;
+  color: green;
 }

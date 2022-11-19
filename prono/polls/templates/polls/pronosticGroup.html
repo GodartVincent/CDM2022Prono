@@ -94,14 +94,19 @@
           </div>
         </form>
         <div class="group__submit">
-          <button type="submit" class="button">Valider</button>
+          <button type="submit" class="button">
+            {% if group.isfilled %}Mettre à jour
+            {% else %}
+              Valider
+            {% endif %}
+          </button>
         </div>
       </div>
     {% endif %}
   </div>
 
   {% if group.rank_1 >= 0 and group.rank_2 >= 0 and group.rank_3 >= 0 and group.rank_4 >= 0 %}
-    <div class="result">
+    <div class="group__result">
       {{"Réponse : " }}
       {{ group.rank_1 }}
       {{", " }}
