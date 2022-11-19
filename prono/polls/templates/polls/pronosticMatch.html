@@ -1,57 +1,46 @@
-
 <div class="match">
-  {% if match.isfilled %} {% if match.isPronoOver %}
-    <div class="matchSquad1">
-      {{ match.squad_1 }}
-    </div>
-    <div class="matchInput">
-      {{ match.prono_1 }}
-    </div> 
-    <div class="opposing">
-      {{" - " }}
-    </div>
-    <div class="matchInput">
-      {{ match.prono_2 }}
-    </div>
-    <div class="matchSquad2">
-      {{ match.squad_2 }}
-    </div>
-    <div class="submitButton"></div>
-  {% else %}
-  <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
-    {% csrf_token %}
+  {% if match.isfilled %}
+    {% if match.isPronoOver %}
       <div class="matchSquad1">
         {{ match.squad_1 }}
       </div>
       <div class="matchInput">
-        <input
-          type="number"
-          name="score"
-          id="choice"
-          value="{{ match.prono_1 }}"
-          required
-        />
+        {{ match.prono_1 }}
       </div>
       <div class="opposing">
         {{" - " }}
       </div>
       <div class="matchInput">
-        <input
-          type="number"
-          name="score"
-          id="choice"
-          value="{{ match.prono_2 }}"
-          required
-        />
+        {{ match.prono_2 }}
       </div>
       <div class="matchSquad2">
         {{ match.squad_2 }}
       </div>
-      <div class="submitButton">
-        <input type="submit" value="Mettre à jour" />
-      </div>
-  </form>
-  {% endif %} {% elif match.isPronoOver %}
+      <div class="submitButton"></div>
+    {% else %}
+      <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
+        {% csrf_token %}
+        <div class="matchSquad1">
+          {{ match.squad_1 }}
+        </div>
+        <div class="matchInput">
+          <input type="number" name="score" id="choice" value="{{ match.prono_1 }}" required="required"/>
+        </div>
+        <div class="opposing">
+          {{" - " }}
+        </div>
+        <div class="matchInput">
+          <input type="number" name="score" id="choice" value="{{ match.prono_2 }}" required="required"/>
+        </div>
+        <div class="matchSquad2">
+          {{ match.squad_2 }}
+        </div>
+        <div class="submitButton">
+          <input type="submit" value="Mettre à jour"/>
+        </div>
+      </form>
+    {% endif %}
+  {% elif match.isPronoOver %}
     <div class="matchSquad1">
       {{ match.squad_1 }}
     </div>
@@ -70,48 +59,52 @@
     <div class="submitButton"></div>
 
   {% else %}
-  <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
-    {% csrf_token %}
+    <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
+      {% csrf_token %}
       <div class="matchSquad1">
         {{ match.squad_1 }}
       </div>
       <div class="matchInput">
-        <input type="number" name="score" id="choice" required/>
+        <input type="number" name="score" id="choice" required="required"/>
       </div>
       <div class="opposing">
         {{" - " }}
       </div>
       <div class="matchInput">
-        <input type="number" name="score" id="choice" required />
+        <input type="number" name="score" id="choice" required="required"/>
       </div>
       <div class="matchSquad2">
         {{ match.squad_2 }}
       </div>
       <div class="submitButton">
-        <input type="submit" value="Valider" />
+        <input type="submit" value="Valider"/>
       </div>
-  </form>
+    </form>
   {% endif %}
 
-{% if match.score_1 >= 0 and match.score_2 >= 0 %}
-<div class="result">
-    <div class="matchSquad1"></div>
-    <div class="matchInput">
-      {{ match.score_1 }}
+  {% if match.score_1 >= 0 and match.score_2 >= 0 %}
+    <div class="result">
+      <div class="matchSquad1"></div>
+      <div class="matchInput">
+        {{ match.score_1 }}
+      </div>
+      <div class="opposing">
+        {{" " }}
+      </div>
+      <div class="matchInput">
+        {{ match.score_2 }}
+      </div>
+      {% if not match.isfilled %}
+        <div class="matchSquad1"></div>
+        <div class="submitButton"></div>
+      {% else %}
+        <div class="points">
+          {{ "Point(s) : "}}
+          {{ match.points }}
+        </div>
+        <div class="submitButton"></div>
+      {% endif %}
     </div>
-    <div class="opposing">
-      {{"  " }}
-    </div>
-    <div class="matchInput">
-      {{ match.score_2 }}
-    </div>
-    {% if not match.isfilled %}
-    <div class="matchSquad1"></div>
-    <div class="submitButton"></div>
-    {% else %}
-  <div class="points">
-    {{ "Point(s) : "}} {{ match.points }}
-  </div>
-  <div class="submitButton"></div> {% endif %}</div>{% endif %}
+  {% endif %}
 
 </div>
