@@ -1,4 +1,12 @@
-from .models import Match, MatchChoice, Question, QuestionChoice, Group, GroupChoice, Poll
+from .models import (
+    Match,
+    MatchChoice,
+    Question,
+    QuestionChoice,
+    Group,
+    GroupChoice,
+    Poll,
+)
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse

@@ -22,11 +22,9 @@
         <h2 class="poll__title-text">{{"Classements"}}</h2>
       </div>
       <div class='groups'>
-        <ul>
-          {% for group in groups %}
-            {% include 'polls/pronosticGroup.html' %}
-          {% endfor %}
-        </ul>
+        {% for group in groups %}
+          {% include 'polls/pronosticGroup.html' %}
+        {% endfor %}
       </div>
     </div>
 
