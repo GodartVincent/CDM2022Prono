@@ -5,12 +5,12 @@
 
     <div class="poll__section poll__section--not-last">
       <div class="poll__title">
-        <i class="fa-solid fa-circle-question poll__icon"></i>
-        <h2 class="poll__title-text">{{"Questions"}}</h2>
+        <i class="fa-solid fa-futbol poll__icon"></i>
+        <h2 class="poll__title-text">{{"Matchs"}}</h2>
       </div>
-      <div class='questions'>
-        {% for question in questions %}
-          {% include 'polls/pronosticQuestion.html' %}
+      <div class='matchs'>
+        {% for match in matchs %}
+          {% include 'polls/pronosticMatch.html' %}
         {% endfor %}
       </div>
 
@@ -30,14 +30,15 @@
 
     <div class="poll__section">
       <div class="poll__title">
-        <i class="fa-solid fa-futbol poll__icon"></i>
-        <h2 class="poll__title-text">{{"Matchs"}}</h2>
+        <i class="fa-solid fa-circle-question poll__icon"></i>
+        <h2 class="poll__title-text">{{"Questions"}}</h2>
       </div>
-      <div class='matchs'>
-        {% for match in matchs %}
-          {% include 'polls/pronosticMatch.html' %}
+      <div class='questions'>
+        {% for question in questions %}
+          {% include 'polls/pronosticQuestion.html' %}
         {% endfor %}
       </div>
     </div>
 
-  </div {% endblock %}
+  </div>
+{% endblock %}

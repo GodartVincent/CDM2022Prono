@@ -8,9 +8,11 @@ from .models import (
     Poll,
 )
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Exists, OuterRef
+from django.http import HttpResponse
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 def indexPolls(request):
@@ -95,10 +97,7 @@ def pronosticMatch(request, match_id):
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.
-            return HttpResponseRedirect(
-                reverse("polls:detailPoll", args=(match.poll.id,))
-            )
-
+            return HttpResponse('<script>history.back();</script>')
 
 def pronosticQuestion(request, question_id):
     if request.method == "POST":
@@ -135,9 +134,7 @@ def pronosticQuestion(request, question_id):
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.
-            return HttpResponseRedirect(
-                reverse("polls:detailPoll", args=(question.poll.id,))
-            )
+            return HttpResponse('<script>history.back();</script>')
 
 
 def pronosticGroup(request, group_id):
@@ -179,9 +176,7 @@ def pronosticGroup(request, group_id):
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.
-            return HttpResponseRedirect(
-                reverse("polls:detailPoll", args=(group.poll.id,))
-            )
+            return HttpResponse('<script>history.back();</script>')
 
 
 # def results(_, match_id):
