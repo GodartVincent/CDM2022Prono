@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <title>Pronostics CDM 2022</title>
   </head>
 
   <header class="header">
-    <div class="header__home"><button><a href="{% url 'polls:indexPoll' %}">Home</a></button></div>
+    <div class="header__home">
+      <button>
+        <a href="{% url 'polls:indexPoll' %}">Home</a>
+      </button>
+    </div>
     <div class="header__title">Pronostics Coupe du Monde 2022</div>
     <div class="header__item">
-      {% if user.is_authenticated %} Hi
-      <span class="header__name">{{ user.username }}!</span>
-      <p><a class="header__link" href="{% url 'logout' %}">Log Out</a></p>
+      {% if user.is_authenticated %}
+        Hi
+        <span class="header__name">{{ user.username }}!</span>
+        <p>
+          <a class="header__link" href="{% url 'logout' %}">Log Out</a>
+        </p>
       {% else %}
-      <p>You are not logged in</p>
-      <a class="header__link" href="{% url 'login' %}">Log In</a>
+        <p>You are not logged in</p>
+        <a class="header__link" href="{% url 'login' %}">Log In</a>
       {% endif %}
     </div>
   </header>
 
   <body>
-    <div class="content">{% block content %}{% endblock %}</div>
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
   </body>
 
 </html>

@@ -1,51 +1,36 @@
 <div class="question">
-<div class="questionStr">
+  <div class="question__string">
+    {{forloop.counter}}
+    -
     {{ question }}
-</div>
-{% if question.isfilled %}
-
-{% if question.isPronoOver %}
-<div class="questionInput">
-    {{ question.prono }}
-</div>
-<div class="submitButton"></div>
-{% else %}
-    <form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
-        {% csrf_token %}
-        <div class="questionInput">
-            <input type="text" name="answer" id="questionChoice" value="{{ question.prono }}" required>
-        </div>
-        <div class="submitButton">
-            <input type="submit" value="Mettre à jour">
-        </div>
-    </form>
-{% endif %}
-
-{% elif question.isPronoOver %}
-<div class="questionInput">
-</div>
-
-{% else %}
-
-<form action="{% url 'polls:pronosticQuestion' question.id %}" method="post">
-    {% csrf_token %}
-    <div class="questionInput">
-        <input type="text" name="answer" id="questionChoice" required>
+  </div>
+  <div class="question__content">
+    <div class="question__actions">
+      {% if question.isPronoOver %}
+        {{ question.prono }}
+      {% elif question.isfilled %}
+        <form action="{% url 'polls:pronosticQuestion' question.id %}" class="question__form" method="post">
+          {% csrf_token %}
+          <input type="text" name="answer" class="question__choice" value="{{ question.prono }}" required="required">
+          <button type="submit" class="button">Mettre à jour</button>
+        </form>
+      {% else %}
+        <form action="{% url 'polls:pronosticQuestion' question.id %}" class="question__form" method="post">
+          {% csrf_token %}
+          <input type="text" name="answer" class="question__choice" required="required">
+          <button type="submit" class="button">Valider</button>
+        </form>
+      {% endif %}
     </div>
-    <div class="submitButton">
-        <input type="submit" value="Valider">
-    </div>
-</form>
-{% endif %}
 
-{% if question.answer != 'None' %}
-<div class="questionResult">
-{{ "Réponse : " }} {{ question.answer }}
-</div>
-{% if question.isfilled %}
-<div class="points">
-{{ "Point(s) : "}} {{ question.points }}
-</div>
-{% endif %}
-{% endif %}
+    {% if question.isPronoOver and question.answer != 'None' %}
+      <div class="question__result">
+        {{ question.answer }}
+        -
+        {{ question.points }}
+        points
+      </div>
+    {% endif %}
+
+  </div>
 </div>

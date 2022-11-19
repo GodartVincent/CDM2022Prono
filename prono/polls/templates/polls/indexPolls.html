@@ -1,19 +1,22 @@
-{% extends "index.html" %}{% block content %} {% if polls %}
-
-{% if user.is_authenticated %}
-<h2>Questionnaires</h2>
-<ul>
-  {% for poll in polls %}
-  <li><a href="{% url 'polls:detailPoll' poll.id %}">{{ poll }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No polls are available.</p>
-{% endif %}
-{% else %}
-<ul>
-  You are not logged in
-  <a href="{% url 'login' %}">Log In</a>
-</ul>
-{% endif %}
+{% extends "index.html" %}
+{% block content %}
+  {% if user.is_authenticated %}
+    {% if polls %}
+      <h2>Questionnaires</h2>
+      <ul>
+        {% for poll in polls %}
+          <li>
+            <a href="{% url 'polls:detailPoll' poll.id %}">{{ poll }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No polls are available.</p>
+    {% endif %}
+  {% else %}
+    <ul>
+      You are not logged in
+      <a href="{% url 'login' %}">Log In</a>
+    </ul>
+  {% endif %}
 {% endblock %}

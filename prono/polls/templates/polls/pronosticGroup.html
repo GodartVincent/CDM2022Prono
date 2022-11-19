@@ -1,221 +1,127 @@
-
 <div class="group">
-  <div class="groupStr">
-      {{ group }}
+  <div class="group__string">
+    {{ group }}
   </div>
-  {% if group.isfilled %} {% if group.isPronoOver %}
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_1 }}
+  <div class="group__teams">
+    {% if group.isPronoOver%}
+      <div class="group__team">
+        <div class="group__squad">
+          {{ group.squad_1 }}
+        </div>
+        <div class="group__rank">
+          {{ group.prono_1 }}
+        </div>
       </div>
-      <div class="groupInput">
-        {{ group.prono_1 }}
+      <div class="group__team">
+        <div class="group__squad">
+          {{ group.squad_2 }}
+        </div>
+        <div class="group__rank">
+          {{ group.prono_2 }}
+        </div>
       </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_2 }}
+      <div class="group__team">
+        <div class="group__squad">
+          {{ group.squad_3 }}
+        </div>
+        <div class="group__rank">
+          {{ group.prono_3 }}
+        </div>
       </div>
-      <div class="groupInput">
-        {{ group.prono_2 }}
+      <div class="group__team">
+        <div class="group__squad">
+          {{ group.squad_4 }}
+        </div>
+        <div class="group__rank">
+          {{ group.prono_4 }}
+        </div>
       </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_3 }}
-      </div>
-      <div class="groupInput">
-        {{ group.prono_3 }}
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_4 }}
-      </div>
-      <div class="groupInput">
-        {{ group.prono_4 }}
-      </div>
-      <div class="submitButton"></div>
-    </p>
-  {% else %}
-  <form action="{% url 'polls:pronosticGroup' group.id %}" method="post">
-    {% csrf_token %}
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_1 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">{{ group.prono_1 }}</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_2 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">{{ group.prono_2 }}</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_3 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">{{ group.prono_3 }}</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_4 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">{{ group.prono_4 }}</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-      <div class="submitButton">
-        <input type="submit" value="Mettre à jour" />
-      </div>
-    </p>
-  </form>
-  {% endif %} {% elif group.isPronoOver %}
-</p>
-    <div class="groupSquad">
-      {{ group.squad_1 }}
-    </div>
-    <div class="groupInput">
-      {{" X " }}
-    </div>
-  </p>
-  <p>
-    <div class="groupSquad">
-      {{ group.squad_2 }}
-    </div>
-    <div class="groupInput">
-      {{" X " }}
-    </div>
-  </p>
-  <p>
-    <div class="groupSquad">
-      {{ group.squad_3 }}
-    </div>
-    <div class="groupInput">
-      {{" X " }}
-    </div>
-  </p>
-  <p>
-    <div class="groupSquad">
-      {{ group.squad_4 }}
-    </div>
-    <div class="groupInput">
-      {{" X " }}
-    </div>
-    <div class="submitButton"></div>
-  </p>
-
-  {% else %}
-  <form action="{% url 'polls:pronosticGroup' group.id %}" method="post">
-    {% csrf_token %}
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_1 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">Rang</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_2 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">Rang</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_3 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">Rang</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-    </p>
-    <p>
-      <div class="groupSquad">
-        {{ group.squad_4 }}
-      </div>
-      <div class="groupInput">
-        <select name="rank" id="groupChoice" required>
-            <option value="">Rang</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select>
-      </div>
-      <div class="submitButton">
-        <input type="submit" value="Valider" />
-      </div>
-    </p>
-  </form>
-  {% endif %}
-
-{% if group.rank_1 >= 0 and group.rank_2 >= 0 and group.rank_3 >= 0 and group.rank_4 >= 0 %}
-<div class="result">
-      {{"Réponse : " }}
-      {{ group.rank_1 }}
-      {{",  " }}
-      {{ group.rank_2 }}
-      {{",  " }}
-      {{ group.rank_3 }}
-      {{",  " }}
-      {{ group.rank_4 }}
-    {% if group.isfilled %}
-      <div class="points">
-        {{ "Point(s) : "}} {{ group.points }}
+    {% else %}
+      <div class="group__form">
+        <form action="{% url 'polls:pronosticGroup' group.id %}" method="post">
+          {% csrf_token %}
+          <div class="group__team">
+            <div class="group__squad">
+              {{ group.squad_1 }}
+            </div>
+            <div class="group__input">
+              <select name="rank" id="group_1" required="required">
+                <option value="1" {% if group.prono_1 == 1 %} selected="selected" {% endif %}>1</option>
+                <option value="2" {% if group.prono_1 == 2 %} selected="selected" {% endif %}>2</option>
+                <option value="3" {% if group.prono_1 == 3 %} selected="selected" {% endif %}>3</option>
+                <option value="4" {% if group.prono_1 == 4 %} selected="selected" {% endif %}>4</option>
+              </select>
+            </div>
+          </div>
+          <div class="group__team">
+            <div class="group__squad">
+              {{ group.squad_2 }}
+            </div>
+            <div class="group__input">
+              <select name="rank" id="group_2" required="required">
+                <option value="1" {% if group.prono_2 == 1 %} selected="selected" {% endif %}>1</option>
+                <option value="2" {% if group.prono_2 == 2 %} selected="selected" {% endif %}>2</option>
+                <option value="3" {% if group.prono_2 == 3 %} selected="selected" {% endif %}>3</option>
+                <option value="4" {% if group.prono_2 == 4 %} selected="selected" {% endif %}>4</option>
+              </select>
+            </div>
+          </div>
+          <div class="group__team">
+            <div class="group__squad">
+              {{ group.squad_3 }}
+            </div>
+            <div class="group__input">
+              <select name="rank" id="group_3" required="required">
+                <option value="1" {% if group.prono_3 == 1 %} selected="selected" {% endif %}>1</option>
+                <option value="2" {% if group.prono_3 == 2 %} selected="selected" {% endif %}>2</option>
+                <option value="3" {% if group.prono_3 == 3 %} selected="selected" {% endif %}>3</option>
+                <option value="4" {% if group.prono_3 == 4 %} selected="selected" {% endif %}>4</option>
+              </select>
+            </div>
+          </div>
+          <div class="group__team">
+            <div class="group__squad">
+              {{ group.squad_4 }}
+            </div>
+            <div class="group__input">
+              <select name="rank" id="group_4" required="required">
+                <option value="1" {% if group.prono_4 == 1 %} selected="selected" {% endif %}>1</option>
+                <option value="2" {% if group.prono_4 == 2 %} selected="selected" {% endif %}>2</option>
+                <option value="3" {% if group.prono_4 == 3 %} selected="selected" {% endif %}>3</option>
+                <option value="4" {% if group.prono_4 == 4 %} selected="selected" {% endif %}>4</option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <div class="group__submit">
+          <button type="submit" class="button">
+            {% if group.isfilled %}Mettre à jour
+            {% else %}
+              Valider
+            {% endif %}
+          </button>
+        </div>
       </div>
     {% endif %}
   </div>
-{% endif %}
+
+  {% if group.rank_1 >= 0 and group.rank_2 >= 0 and group.rank_3 >= 0 and group.rank_4 >= 0 %}
+    <div class="group__result">
+      {{"Réponse : " }}
+      {{ group.rank_1 }}
+      {{", " }}
+      {{ group.rank_2 }}
+      {{", " }}
+      {{ group.rank_3 }}
+      {{", " }}
+      {{ group.rank_4 }}
+      {% if group.isfilled %}
+        <div class="points">
+          {{ "Point(s) : "}}
+          {{ group.points }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 
 </div>
