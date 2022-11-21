@@ -89,7 +89,7 @@ def detailPoll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
     
     subquery = MatchChoice.objects.filter(match=OuterRef("pk"), user=request.user)
-    matchs = poll.match_set.all().annotate(
+    matchs = poll.match_set.all().order_by("pub_date").annotate(
         isfilled=Exists(subquery),
         prono_1=subquery.values("score_1"),
         prono_2=subquery.values("score_2"),
@@ -97,14 +97,14 @@ def detailPoll(request, poll_id):
     matchScores = computeMatchScores(matchs)
 
     subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=request.user)
-    questions = poll.question_set.all().annotate(
+    questions = poll.question_set.all().order_by("pub_date").annotate(
         isfilled=Exists(subquery),
         prono=subquery.values("choice"),
     )
     questionScores = computeQuestionScores(questions)
 
     subquery = GroupChoice.objects.filter(group=OuterRef("pk"), user=request.user)
-    groups = poll.group_set.all().annotate(
+    groups = poll.group_set.all().order_by("pub_date").annotate(
         isfilled=Exists(subquery),
         prono_1=subquery.values("rank_1"),
         prono_2=subquery.values("rank_2"),
