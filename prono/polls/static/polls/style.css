@@ -185,6 +185,14 @@ a {
   font-weight: 700;
   font-size: 1.75rem;
 }
+
+.poll__points {
+  font-style: italic;
+  color: green;
+  font-weight: normal;
+  font-size: 1.15rem;
+}
+
 .poll__link {
   color: blue;
 }

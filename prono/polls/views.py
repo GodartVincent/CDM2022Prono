@@ -94,12 +94,14 @@ def detailPoll(request, poll_id):
         prono_1=subquery.values("score_1"),
         prono_2=subquery.values("score_2"),
     )
+    matchScores = computeMatchScores(matchs)
 
     subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=request.user)
     questions = poll.question_set.all().annotate(
         isfilled=Exists(subquery),
         prono=subquery.values("choice"),
     )
+    questionScores = computeQuestionScores(questions)
 
     subquery = GroupChoice.objects.filter(group=OuterRef("pk"), user=request.user)
     groups = poll.group_set.all().annotate(
@@ -109,14 +111,17 @@ def detailPoll(request, poll_id):
         prono_3=subquery.values("rank_3"),
         prono_4=subquery.values("rank_4"),
     )
+    groupScores = computeGroupScores(groups)
+
     return render(
         request,
         "polls/detailPoll.html",
         {
             "poll": poll,
-            "matchs"    : zip(matchs   , computeMatchScores   (matchs   )),
-            "questions" : zip(questions, computeQuestionScores(questions)),
-            "groups"    : zip(groups   , computeGroupScores   (groups   ))
+            "matchs"    : zip(matchs   , matchScores),
+            "questions" : zip(questions, questionScores),
+            "groups"    : zip(groups   , groupScores),
+            "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores)
         },
     )
 
