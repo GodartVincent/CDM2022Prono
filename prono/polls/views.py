@@ -48,7 +48,7 @@ def computeQuestionScores(questions):
         questionPoints = questions[questionIdx].points
         pointScoreType = questions[questionIdx].pointScoreType
         if prono is not None and len(prono) != 0\
-            and answer is not None and len(answer) != 0\
+            and answer is not None and answer != "None" and len(answer) != 0\
                 and questionPoints is not None:
             if pointScoreType is None or len(pointScoreType) == 0 or pointScoreType == "EXACT":
                 if answer.lower() in prono.lower():
