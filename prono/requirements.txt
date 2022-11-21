@@ -6,10 +6,11 @@ django-livereload-server==0.4
 fontawesomefree==6.2.1
 gunicorn==20.1.0
 livereload==2.6.3
+numpy==1.23.5
 psycopg2-binary==2.9.5
 six==1.16.0
 soupsieve==2.3.2.post1
 sqlparse==0.4.3
 tornado==6.2
 tzdata==2022.6
-whitenoise==5.3.0
+whitenoise==6.2.0
