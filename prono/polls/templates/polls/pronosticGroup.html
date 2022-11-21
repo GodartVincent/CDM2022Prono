@@ -38,7 +38,7 @@
       </div>
     {% else %}
       <div class="group__form">
-        <form action="{% url 'polls:pronosticGroup' group.id %}" method="post">
+        <form action="{% url 'polls:pronosticGroup' group.id %}" name="group{{ forloop.counter }}" method="post">
           {% csrf_token %}
           <div class="group__team">
             <div class="group__squad">
@@ -118,7 +118,7 @@
       {% if group.isfilled %}
         <div class="points">
           {{ "Point(s) : "}}
-          {{ group.points }}
+          {{ point }}
         </div>
       {% endif %}
     </div>

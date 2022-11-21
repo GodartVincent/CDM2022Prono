@@ -36,7 +36,7 @@
       </div>
     </div>
   {% else %}
-    <form action="{% url 'polls:pronosticMatch' match.id %}" method="post">
+    <form action="{% url 'polls:pronosticMatch' match.id %}" name="match{{ forloop.counter }}" method="post">
       {% csrf_token %}
       <div class="match__teams">
         <div class="match__team">
@@ -71,7 +71,7 @@
     {% if match.score_1 >= 0 and match.score_2 >= 0 %}
       <div class="match__points">
         {{ "Point(s) : "}}
-        {{ match.points }}
+        {{ point }}
       </div>
     {% endif %}
 

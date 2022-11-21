@@ -11,8 +11,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.db.models import Exists, OuterRef
 from django.http import HttpResponse
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+import numpy as np
 
 
 def indexPolls(request):
@@ -21,22 +20,85 @@ def indexPolls(request):
     return render(request, "polls/indexPolls.html", context)
 
 
+def computeMatchScores(matchs):
+    matchNb = len(matchs)
+    points = [0]*matchNb
+    for matchIdx in range(matchNb):
+        prono_1 = matchs[matchIdx].prono_1
+        prono_2 = matchs[matchIdx].prono_2
+        score_1 = matchs[matchIdx].score_1
+        score_2 = matchs[matchIdx].score_2
+        if prono_1 is not None and prono_1 != -1 and score_1 != -1\
+            and prono_2 is not None and prono_2 != -1 and score_2 != -1:
+            if prono_1 == score_1 and prono_2 == score_2:
+                points[matchIdx] = 5
+            elif prono_1 - prono_2 == score_1 - score_2:
+                points[matchIdx] = 3
+            elif np.sign(prono_1 - prono_2) == np.sign(score_1 - score_2):
+                points[matchIdx] = 2
+    return points
+
+
+def computeQuestionScores(questions):
+    questionNb = len(questions)
+    points = [0]*questionNb
+    for questionIdx in range(questionNb):
+        prono  = questions[questionIdx].prono
+        answer = questions[questionIdx].answer
+        questionPoints = questions[questionIdx].points
+        pointScoreType = questions[questionIdx].pointScoreType
+        if prono is not None and len(prono) != 0\
+            and answer is not None and len(answer) != 0\
+                and questionPoints is not None:
+            if pointScoreType is None or len(pointScoreType) == 0 or pointScoreType == "EXACT":
+                if answer.lower() in prono.lower():
+                    points[questionIdx] = questionPoints
+            elif pointScoreType == "DIFF":
+                points[questionIdx] = questionPoints - min(questionPoints, abs(int(answer) - int(prono)))
+            elif pointScoreType == "DIFF2":
+                points[questionIdx] = questionPoints - min(questionPoints, int(np.floor(abs(float(answer) - float(prono))/2))) 
+    return points
+
+
+def isValid(entries):
+    isValid = True
+    for entry in entries:
+        isValid = isValid and entry is not None and entry in range(1, 5)
+    return isValid
+
+
+def computeGroupScores(groups):
+    groupNb = len(groups)
+    points = [0]*groupNb
+    for groupIdx in range(groupNb):
+        prono = [groups[groupIdx].prono_1, groups[groupIdx].prono_2, groups[groupIdx].prono_3, groups[groupIdx].prono_4]
+        rank  = [groups[groupIdx].rank_1 , groups[groupIdx].rank_2 , groups[groupIdx].rank_3 , groups[groupIdx].rank_4 ]
+        if isValid(prono) and isValid(rank):
+            points[groupIdx] = 12
+            for team1Idx in range(4):
+                for team2Idx in range(team1Idx+1, 4):
+                    inferiorAndWrong = rank[team1Idx] > rank[team2Idx] and prono[team1Idx] <= prono[team2Idx]
+                    superiorAndWrong = rank[team1Idx] < rank[team2Idx] and prono[team1Idx] >= prono[team2Idx]
+                    if inferiorAndWrong or superiorAndWrong:
+                        points[groupIdx] -= 2
+    return points
+
+
+
 def detailPoll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
-
-    subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=request.user)
-    questions = poll.question_set.all().annotate(
-        isfilled=Exists(subquery),
-        prono=subquery.values("choice"),
-        points=subquery.values("points"),
-    )
-
+    
     subquery = MatchChoice.objects.filter(match=OuterRef("pk"), user=request.user)
     matchs = poll.match_set.all().annotate(
         isfilled=Exists(subquery),
         prono_1=subquery.values("score_1"),
         prono_2=subquery.values("score_2"),
-        points=subquery.values("points"),
+    )
+
+    subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=request.user)
+    questions = poll.question_set.all().annotate(
+        isfilled=Exists(subquery),
+        prono=subquery.values("choice"),
     )
 
     subquery = GroupChoice.objects.filter(group=OuterRef("pk"), user=request.user)
@@ -46,12 +108,16 @@ def detailPoll(request, poll_id):
         prono_2=subquery.values("rank_2"),
         prono_3=subquery.values("rank_3"),
         prono_4=subquery.values("rank_4"),
-        points=subquery.values("points"),
     )
     return render(
         request,
         "polls/detailPoll.html",
-        {"poll": poll, "matchs": matchs, "questions": questions, "groups": groups},
+        {
+            "poll": poll,
+            "matchs"    : zip(matchs   , computeMatchScores   (matchs   )),
+            "questions" : zip(questions, computeQuestionScores(questions)),
+            "groups"    : zip(groups   , computeGroupScores   (groups   ))
+        },
     )
 
 
@@ -61,8 +127,10 @@ def detailMatch(request, match_id):
 
 
 def pronosticMatch(request, match_id):
+    print("in pronoMatch")
     if request.method == "POST":
         match = get_object_or_404(Match, pk=match_id)
+        print(f"in POST, match = {match.__str__()}")
         if match.isPronoOver():
             # Redisplay the match pronosticing form.
             return detailPoll(request, match.poll.pk)

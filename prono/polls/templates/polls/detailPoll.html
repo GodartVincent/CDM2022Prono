@@ -12,7 +12,7 @@
         {{"Score exact : 5 points, bonne différence de buts : 3 points, bon vainqueur : 2 points."}}
       </div>
       <div class='matchs'>
-        {% for match in matchs %}
+        {% for match, point in matchs %}
           {% include 'polls/pronosticMatch.html' %}
         {% endfor %}
       </div>
@@ -28,7 +28,7 @@
         {{"12 points moins 2 fois la "}} <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a> {{ " entre le pronostic et la vérité."}}
       </div>
       <div class='groups'>
-        {% for group in groups %}
+        {% for group, point in groups %}
           {% include 'polls/pronosticGroup.html' %}
         {% endfor %}
       </div>
@@ -43,7 +43,7 @@
         {{"Les questions ne concernent que la "}}{{poll.name}}{{" (sauf la première). Le nombre de points remportés dépend de la question."}}
       </div>
       <div class='questions'>
-        {% for question in questions %}
+        {% for question, point in questions %}
           {% include 'polls/pronosticQuestion.html' %}
         {% endfor %}
       </div>

@@ -59,6 +59,13 @@ class Pronostic(models.Model):
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     answer = models.CharField(max_length=200, default="None")
+    # Max point number earned if correct answer
+    points = models.IntegerField(default=0)
+    # Method to compute points :
+    # "EXACT"  => points if prono == answer else 0
+    # "DIFF"   => points - min(abs(answer-prono), points)
+    # "DIFF2"  => points - min(floor(abs(answer-prono)/2), points)
+    pointScoreType = models.CharField(max_length=40, default="EXACT")
     pub_date = models.DateTimeField("date published")
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
 
