@@ -257,11 +257,16 @@ a {
   gap: 1rem;
 }
 
+.question__actions {
+  display: inline-block;
+  min-width: 150px;
+}
+
 .question__result {
   display: inline-block;
   font-weight: normal;
   font-style: italic;
-  width: 180px;
+  width: 250px;
   color: green;
 }
 

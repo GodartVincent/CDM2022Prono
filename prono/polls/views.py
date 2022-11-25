@@ -51,7 +51,7 @@ def computeQuestionScores(questions):
             and answer is not None and answer != "None" and len(answer) != 0\
                 and questionPoints is not None:
             if pointScoreType is None or len(pointScoreType) == 0 or pointScoreType == "EXACT":
-                if answer.lower() in prono.lower():
+                if answer.lower() in prono.lower() or prono.lower() in answer.lower():
                     points[questionIdx] = questionPoints
             elif pointScoreType == "DIFF":
                 points[questionIdx] = questionPoints - min(questionPoints, abs(int(answer) - int(prono)))
