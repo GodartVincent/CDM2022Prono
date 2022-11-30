@@ -19,13 +19,14 @@
 
     </div>
 
+    {% if isGroup %}
     <div class="poll__section poll__section--not-last">
       <div class="poll__title">
         <i class="fa-solid fa-ranking-star poll__icon"></i>
         <h2 class="poll__title-text">{{"Classements"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"12 points moins 2 fois la "}} <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a> {{ " entre le pronostic et la vérité."}}
+        {{"6 points moins la "}} <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a> {{ " entre le pronostic et la vérité."}}
       </div>
       <div class='groups'>
         {% for group, point in groups %}
@@ -33,6 +34,7 @@
         {% endfor %}
       </div>
     </div>
+    {% endif %}
 
     <div class="poll__section">
       <div class="poll__title">
@@ -40,7 +42,7 @@
         <h2 class="poll__title-text">{{"Questions"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"Les questions ne concernent que la "}}{{poll.name}}{{" (sauf la première). Le nombre de points remportés dépend de la question."}}
+        {{"Les questions ne concernent que la/les "}}{{poll.name}}{{" (sauf la première). Le nombre de points remportés dépend de la question."}}
       </div>
       <div class='questions'>
         {% for question, point in questions %}

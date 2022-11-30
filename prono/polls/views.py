@@ -74,13 +74,13 @@ def computeGroupScores(groups):
         prono = [groups[groupIdx].prono_1, groups[groupIdx].prono_2, groups[groupIdx].prono_3, groups[groupIdx].prono_4]
         rank  = [groups[groupIdx].rank_1 , groups[groupIdx].rank_2 , groups[groupIdx].rank_3 , groups[groupIdx].rank_4 ]
         if isValid(prono) and isValid(rank):
-            points[groupIdx] = 12
+            points[groupIdx] = 6
             for team1Idx in range(4):
                 for team2Idx in range(team1Idx+1, 4):
                     inferiorAndWrong = rank[team1Idx] > rank[team2Idx] and prono[team1Idx] <= prono[team2Idx]
                     superiorAndWrong = rank[team1Idx] < rank[team2Idx] and prono[team1Idx] >= prono[team2Idx]
                     if inferiorAndWrong or superiorAndWrong:
-                        points[groupIdx] -= 2
+                        points[groupIdx] -= 1
     return points
 
 
@@ -121,7 +121,8 @@ def detailPoll(request, poll_id):
             "matchs"    : zip(matchs   , matchScores),
             "questions" : zip(questions, questionScores),
             "groups"    : zip(groups   , groupScores),
-            "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores)
+            "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores),
+            "isGroup"   : len(groups) > 0,
         },
     )
 
