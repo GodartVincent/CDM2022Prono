@@ -493,6 +493,22 @@ th {
   color: black;
 }
 
+#rang4 {
+  color: #5a3a22;
+}
+
+#rang3 {
+  color: #614e1a;
+}
+
+#rang2 {
+  color: silver;
+}
+
+#rang1 {
+  color: gold;
+}
+
 #result3 {
   background-color: #dedede;
 }

@@ -66,9 +66,7 @@ def results(request):
             totalScoreArray[userIdx] += sum(scoreArray[userIdx][pollIdx])
     
     zippedResults = list(zip(userNames, totalScoreArray, scoreArray))
-    print(str(zippedResults))
     zippedResults = sorted(zippedResults, key = lambda x: x[1], reverse=True)
-    print(str(zippedResults))
     return render(request,
                     "polls/results.html",
                     {
