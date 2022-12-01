@@ -100,7 +100,7 @@ class Qualif(models.Model):
         return self.pub_date - timezone.now() < timedelta(minutes=10)
 
     def __str__(self):
-        return self.squad_1 + " ou " + self.squad_2
+        return self.squad_1 + " - " + self.squad_2
 
 
 class QualifChoice(models.Model):
