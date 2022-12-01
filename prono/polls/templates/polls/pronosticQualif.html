@@ -13,8 +13,8 @@
           <div class="qualif__team">
             <div class="qualif__input">
               <select name="prono" id="qualif" required="required">
-                <option value="{{qualif.squad_1}}" {% if qualif.prono == "{{qualif.squad_1}}" %} selected="selected" {% endif %}>{{qualif.squad_1}}</option>
-                <option value="{{qualif.squad_2}}" {% if qualif.prono == "{{qualif.squad_2}}" %} selected="selected" {% endif %}>{{qualif.squad_2}}</option>
+                <option value="{{qualif.squad_1}}" {% if qualif.prono == qualif.squad_1 %} selected="selected" {% endif %}>{{qualif.squad_1}}</option>
+                <option value="{{qualif.squad_2}}" {% if qualif.prono == qualif.squad_2 %} selected="selected" {% endif %}>{{qualif.squad_2}}</option>
               </select>
             </div>
           </div>
