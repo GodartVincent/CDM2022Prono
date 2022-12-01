@@ -78,7 +78,7 @@ class Question(models.Model):
 
 class QuestionChoice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.CharField(max_length=30)
+    choice = models.CharField(max_length=300)
     points = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
