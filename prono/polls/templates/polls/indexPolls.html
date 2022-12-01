@@ -10,6 +10,7 @@
           </li>
         {% endfor %}
       </ul>
+      <a href="{% url 'polls:results' %}">{{ "Classement" }}</a>
     {% else %}
       <p>No polls are available.</p>
     {% endif %}

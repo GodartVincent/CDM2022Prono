@@ -6,6 +6,7 @@ from .models import (
     Group,
     GroupChoice,
     Poll,
+    User,
 )
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -18,6 +19,61 @@ def indexPolls(request):
     polls = Poll.objects.all()
     context = {"polls": polls}
     return render(request, "polls/indexPolls.html", context)
+
+def results(request):
+    polls = Poll.objects.all()
+    pollNames = polls.values("name")
+    pollNb = len(polls)
+    users = User.objects.all()
+    userNames = []
+    userNb = len(users)
+    scoreArray = []
+    totalScoreArray = []
+    for userIdx in range(userNb):
+        user = users[userIdx]
+        userNames.append(user.username)
+        scoreArray.append([])
+        totalScoreArray.append(0)
+        for pollIdx in range(pollNb):
+            poll = polls[pollIdx]
+            scoreArray[userIdx].append([0, 0, 0])
+            subquery = MatchChoice.objects.filter(match=OuterRef("pk"), user=user)
+            matchs = poll.match_set.all().order_by("pub_date").annotate(
+                isfilled=Exists(subquery),
+                prono_1=subquery.values("score_1"),
+                prono_2=subquery.values("score_2"),
+            )
+            scoreArray[userIdx][pollIdx][0] = sum(computeMatchScores(matchs))
+
+            subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=user)
+            questions = poll.question_set.all().order_by("pub_date").annotate(
+                isfilled=Exists(subquery),
+                prono=subquery.values("choice"),
+            )
+            scoreArray[userIdx][pollIdx][1] = sum(computeQuestionScores(questions))
+
+            subquery = GroupChoice.objects.filter(group=OuterRef("pk"), user=user)
+            groups = poll.group_set.all().order_by("pub_date").annotate(
+                isfilled=Exists(subquery),
+                prono_1=subquery.values("rank_1"),
+                prono_2=subquery.values("rank_2"),
+                prono_3=subquery.values("rank_3"),
+                prono_4=subquery.values("rank_4"),
+            )
+            scoreArray[userIdx][pollIdx][2] = sum(computeGroupScores(groups))
+            totalScoreArray[userIdx] += sum(scoreArray[userIdx][pollIdx])
+    
+    zippedResults = list(zip(userNames, totalScoreArray, scoreArray))
+    print(str(zippedResults))
+    zippedResults = sorted(zippedResults, key = lambda x: x[1], reverse=True)
+    print(str(zippedResults))
+    return render(request,
+                    "polls/results.html",
+                    {
+                        "pollnames" : pollNames,
+                        "users"     : users,
+                        "results"   : zippedResults,
+                    })
 
 
 def computeMatchScores(matchs):
@@ -133,10 +189,8 @@ def detailMatch(request, match_id):
 
 
 def pronosticMatch(request, match_id):
-    print("in pronoMatch")
     if request.method == "POST":
         match = get_object_or_404(Match, pk=match_id)
-        print(f"in POST, match = {match.__str__()}")
         if match.isPronoOver():
             # Redisplay the match pronosticing form.
             return detailPoll(request, match.poll.pk)

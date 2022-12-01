@@ -372,3 +372,94 @@ a {
   font-style: italic;
   color: green;
 }
+
+/* ==================================================== */
+/* ==================================================== */
+
+table {
+  border-collapse: collapse;
+  width:100%;
+}
+
+td {
+  border: 1px solid #adadad;
+  text-align: center;
+}
+
+th {
+  border: 1px solid #efefef;
+  text-align: center;
+  color: #efefef;
+  background-color: var(--main-bg-color-500);
+  font-size: 1.15rem;
+}
+
+.result {
+  background-color: #efefef;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.result__name {
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+
+#empty {
+  border: 0px solid #ffffff;
+}
+
+#under {
+  font-weight: 400;
+}
+
+#user4 {
+  background-color: #5a3a22;
+}
+
+#user3 {
+  background-color: #614e1a;
+}
+
+#user2 {
+  background-color: silver;
+  color: black;
+}
+
+#user1 {
+  background-color: gold;
+  color: black;
+}
+
+#result3 {
+  background-color: #dedede;
+}
+
+#result2 {
+  background-color: #d4d4d4;
+}
+
+#result1 {
+  background-color: #c8c8c8;
+}
+
+.result__header {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.result__poll_cell {
+  display: inline-flex;
+  text-align: center;
+  width: 210px;
+  height: 30px;
+  border: 1px solid var(--main-text-color);
+}
+
+.result__cell {
+  display: inline-flex;
+  text-align: center;
+  border: 1px solid var(--main-text-color);
+  width: 70px;
+  height: 30px;
+}
