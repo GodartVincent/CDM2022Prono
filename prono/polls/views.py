@@ -3,6 +3,8 @@ from .models import (
     MatchChoice,
     Question,
     QuestionChoice,
+    Qualif,
+    QualifChoice,
     Group,
     GroupChoice,
     Poll,
@@ -140,6 +142,21 @@ def computeGroupScores(groups):
     return points
 
 
+def computeQualifScores(qualifs):
+    qualifNb = len(qualifs)
+    points = [0]*qualifNb
+    for questionIdx in range(qualifNb):
+        prono  = qualifs[questionIdx].prono
+        answer = qualifs[questionIdx].answer
+        questionPoints = 2
+        if prono is not None and len(prono) != 0\
+            and answer is not None and answer != "None" and len(answer) != 0\
+                and questionPoints is not None:
+            if answer.lower() in prono.lower() or prono.lower() in answer.lower():
+                points[questionIdx] = questionPoints
+    return points
+
+
 
 def detailPoll(request, poll_id):
     poll = get_object_or_404(Poll, pk=poll_id)
@@ -169,6 +186,13 @@ def detailPoll(request, poll_id):
     )
     groupScores = computeGroupScores(groups)
 
+    subquery = QualifChoice.objects.filter(qualif=OuterRef("pk"), user=request.user)
+    qualifs = poll.qualif_set.all().order_by("pub_date").annotate(
+        isfilled=Exists(subquery),
+        prono=subquery.values("choice"),
+    )
+    qualifScores = computeQualifScores(qualifs)
+
     return render(
         request,
         "polls/detailPoll.html",
@@ -177,8 +201,10 @@ def detailPoll(request, poll_id):
             "matchs"    : zip(matchs   , matchScores),
             "questions" : zip(questions, questionScores),
             "groups"    : zip(groups   , groupScores),
-            "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores),
+            "qualifs"    : zip(qualifs  , qualifScores),
+            "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores)+sum(qualifScores),
             "isGroup"   : len(groups) > 0,
+            "isQualif"  : len(qualifs) > 0,
         },
     )
 
@@ -261,6 +287,30 @@ def pronosticGroup(request, group_id):
             return detailPoll(request, group.poll.pk)
         else:
             groupChoice.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return HttpResponse("<script>history.back();</script>")
+
+
+def pronosticQualif(request, qualif_id):
+    if request.method == "POST":
+        qualif = get_object_or_404(Qualif, pk=qualif_id)
+        if qualif.isPronoOver():
+            # Redisplay the match pronosticing form.
+            return detailPoll(request, qualif.poll.pk)
+        try:
+            qualifChoice = qualif.qualifchoice_set.get(user_id=request.user)
+        except (KeyError, QualifChoice.DoesNotExist):
+            qualifChoice = qualif.qualifchoice_set.create(user=request.user)
+
+        try:
+            qualifChoice.choice = request.POST.getlist("prono")[0]
+        except (ValueError):
+            # Redisplay the qualif pronosticing form.
+            return detailPoll(request, qualif.poll.pk)
+        else:
+            qualifChoice.save()
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             # user hits the Back button.

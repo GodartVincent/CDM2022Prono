@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Poll, Match, MatchChoice, Question, QuestionChoice, Group, GroupChoice
+from .models import Poll, Match, MatchChoice, Question, QuestionChoice, Group, GroupChoice, Qualif, QualifChoice
 
 
 class MatchAdmin(admin.ModelAdmin):
@@ -13,6 +13,12 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class QuestionChoiceAdmin(admin.ModelAdmin):
     list_display = ('choice', 'points', 'user', 'question')
+
+class QualifAdmin(admin.ModelAdmin):
+    list_display = ('squad_1', 'squad_2', 'pub_date')
+
+class QualifChoiceAdmin(admin.ModelAdmin):
+    list_display = ('choice', 'points', 'user')
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('group_name', 'rank_1', 'pub_date')
@@ -28,3 +34,5 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(QuestionChoice, QuestionChoiceAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(GroupChoice, GroupChoiceAdmin)
+admin.site.register(Qualif, QualifAdmin)
+admin.site.register(QualifChoice, QualifChoiceAdmin)

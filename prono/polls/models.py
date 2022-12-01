@@ -86,6 +86,38 @@ class QuestionChoice(models.Model):
         return self.choice
 
 
+class Qualif(models.Model):
+    squad_1 = models.CharField(max_length=20)
+    squad_2 = models.CharField(max_length=20)
+
+    answer = models.CharField(max_length=20, default="None")
+
+    pub_date = models.DateTimeField("date published")
+
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
+
+    def isPronoOver(self):
+        return self.pub_date - timezone.now() < timedelta(minutes=10)
+
+    def __str__(self):
+        return self.squad_1 + " ou " + self.squad_2
+
+
+class QualifChoice(models.Model):
+    qualif = models.ForeignKey(Qualif, on_delete=models.CASCADE)
+
+    choice = models.CharField(max_length=20, default="None")
+
+    points = models.IntegerField(default=0)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        if self.choice != "None":
+            return str(self.choice)
+        return "Pas encore pronostiqué."
+
+
 class Group(models.Model):
     group_name = models.CharField(max_length=30)
     squad_1 = models.CharField(max_length=20)

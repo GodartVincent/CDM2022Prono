@@ -1,0 +1,46 @@
+<div class="qualif">
+  <div class="qualif__string">
+    {{ qualif }}
+  </div>
+    {% if qualif.isPronoOver%}
+      <div class="qualif__choice">
+        {{ qualif.prono }}
+      </div>
+    {% else %}
+      <div class="qualif__form">
+        <form action="{% url 'polls:pronosticQualif' qualif.id %}" name="qualif{{ forloop.counter }}" method="post">
+          {% csrf_token %}
+          <div class="qualif__team">
+            <div class="qualif__input">
+              <select name="prono" id="qualif" required="required">
+                <option value="{{qualif.squad_1}}" {% if qualif.prono == "{{qualif.squad_1}}" %} selected="selected" {% endif %}>{{qualif.squad_1}}</option>
+                <option value="{{qualif.squad_2}}" {% if qualif.prono == "{{qualif.squad_2}}" %} selected="selected" {% endif %}>{{qualif.squad_2}}</option>
+              </select>
+            </div>
+          </div>
+        <div class="qualif__submit">
+          <button type="submit" class="button">
+            {% if qualif.isfilled %}Mettre à jour
+            {% else %}
+              Valider
+            {% endif %}
+          </button>
+        </div>
+      </form>
+      </div>
+    {% endif %}
+
+  {% if qualif.answer != "None" %}
+    <div class="qualif__result">
+      {{"Réponse : " }}
+      {{ qualif.answer }}
+      {% if qualif.isfilled %}
+        <div class="points">
+          {{ "Point(s) : "}}
+          {{ point }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</div>

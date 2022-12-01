@@ -322,6 +322,64 @@ a {
 /* ==================================================== */
 /* ==================================================== */
 
+.qualifs {
+  display: flex;
+  gap: 1.5rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.qualif {
+  width: 200px;
+}
+
+.qualif__string {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.qualif__input {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.qualif__choice {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.qualif__squad {
+  width: 200px;
+  height: 34px;
+  font-size: 1.125em;
+  text-align: center;
+  border: 1px solid var(--main-text-color);
+  background-color: var(--main-bg-color-100);
+}
+
+.qualif__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.qualif__submit {
+  display: flex;
+}
+
+.qualif__result {
+  display: inline-block;
+  font-weight: normal;
+  font-style: italic;
+  width: 180px;
+  color: green;
+}
+
+/* ==================================================== */
+/* ==================================================== */
+
 .matchs {
   display: flex;
   flex-direction: column;
