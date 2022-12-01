@@ -442,24 +442,3 @@ th {
 #result1 {
   background-color: #c8c8c8;
 }
-
-.result__header {
-  font-weight: 700;
-  font-size: 1.15rem;
-}
-
-.result__poll_cell {
-  display: inline-flex;
-  text-align: center;
-  width: 210px;
-  height: 30px;
-  border: 1px solid var(--main-text-color);
-}
-
-.result__cell {
-  display: inline-flex;
-  text-align: center;
-  border: 1px solid var(--main-text-color);
-  width: 70px;
-  height: 30px;
-}
