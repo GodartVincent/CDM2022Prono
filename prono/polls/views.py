@@ -67,7 +67,6 @@ def results(request):
                 prono_4=subquery.values("rank_4"),
             )
             scoreArray[userIdx][pollIdx][2] = sum(computeGroupScores(groups, poll.rank_score, poll.rank_factor_score))
-            totalScoreArray[userIdx] += sum(scoreArray[userIdx][pollIdx])
 
             subquery = QualifChoice.objects.filter(qualif=OuterRef("pk"), user=user)
             qualifs = poll.qualif_set.all().order_by("pub_date").annotate(
