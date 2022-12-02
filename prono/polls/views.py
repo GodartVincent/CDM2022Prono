@@ -45,7 +45,11 @@ def results(request):
                 prono_1=subquery.values("score_1"),
                 prono_2=subquery.values("score_2"),
             )
-            scoreArray[userIdx][pollIdx][0] = sum(computeMatchScores(matchs))
+            scoreArray[userIdx][pollIdx][0] = sum(computeMatchScores(matchs,
+                                                                    poll.exact_score,
+                                                                    poll.diff_score,
+                                                                    poll.win_score,
+                                                                    poll.minority_score))
 
             subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=user)
             questions = poll.question_set.all().order_by("pub_date").annotate(
@@ -62,9 +66,17 @@ def results(request):
                 prono_3=subquery.values("rank_3"),
                 prono_4=subquery.values("rank_4"),
             )
-            scoreArray[userIdx][pollIdx][2] = sum(computeGroupScores(groups))
+            scoreArray[userIdx][pollIdx][2] = sum(computeGroupScores(groups, poll.rank_score, poll.rank_factor_score))
             totalScoreArray[userIdx] += sum(scoreArray[userIdx][pollIdx])
-    
+
+            subquery = QualifChoice.objects.filter(qualif=OuterRef("pk"), user=user)
+            qualifs = poll.qualif_set.all().order_by("pub_date").annotate(
+                isfilled=Exists(subquery),
+                prono=subquery.values("choice"),
+            )
+            scoreArray[userIdx][pollIdx][2] += sum(computeQualifScores(qualifs, poll.qualif_score))
+            totalScoreArray[userIdx] += sum(scoreArray[userIdx][pollIdx])
+            
     zippedResults = list(zip(userNames, totalScoreArray, scoreArray))
     zippedResults = sorted(zippedResults, key = lambda x: x[1], reverse=True)
     return render(request,
@@ -76,22 +88,47 @@ def results(request):
                     })
 
 
-def computeMatchScores(matchs):
+def computeMatchScores(matchs, exact_score, diff_score, win_score, minority_score):
     matchNb = len(matchs)
     points = [0]*matchNb
     for matchIdx in range(matchNb):
+        win_nb = 0
+        equal_nb = 0
+        loss_nb = 0
+        all_prono = MatchChoice.objects.filter(match=matchs[matchIdx])
+        for prono in all_prono:
+            diff = prono.score_1 - prono.score_2
+            win_nb += diff > 0
+            equal_nb += diff == 0
+            loss_nb += diff < 0
+        is_win_major = win_nb >= equal_nb and win_nb >= loss_nb
+        is_equal_major = equal_nb >= win_nb and equal_nb >= loss_nb
+        is_loss_major = loss_nb >= equal_nb and loss_nb >= win_nb
+
         prono_1 = matchs[matchIdx].prono_1
         prono_2 = matchs[matchIdx].prono_2
         score_1 = matchs[matchIdx].score_1
         score_2 = matchs[matchIdx].score_2
+        is_prono_correct = False
         if prono_1 is not None and prono_1 != -1 and score_1 != -1\
             and prono_2 is not None and prono_2 != -1 and score_2 != -1:
+            prono_delta = prono_1 - prono_2
             if prono_1 == score_1 and prono_2 == score_2:
-                points[matchIdx] = 5
-            elif prono_1 - prono_2 == score_1 - score_2:
-                points[matchIdx] = 3
-            elif np.sign(prono_1 - prono_2) == np.sign(score_1 - score_2):
-                points[matchIdx] = 2
+                is_prono_correct = True
+                points[matchIdx] = exact_score
+            elif prono_delta == score_1 - score_2:
+                is_prono_correct = True
+                points[matchIdx] = diff_score
+            elif np.sign(prono_delta) == np.sign(score_1 - score_2):
+                is_prono_correct = True
+                points[matchIdx] = win_score
+            if is_prono_correct:
+                if prono_delta > 0 and not is_win_major:
+                    points[matchIdx] += minority_score
+                elif prono_delta == 0 and not is_equal_major:
+                    points[matchIdx] += minority_score
+                elif prono_delta < 0 and not is_loss_major:
+                    points[matchIdx] += minority_score
     return points
 
 
@@ -123,35 +160,34 @@ def isValid(entries):
     return isValid
 
 
-def computeGroupScores(groups):
+def computeGroupScores(groups, rank_score, rank_factor_score):
     groupNb = len(groups)
     points = [0]*groupNb
     for groupIdx in range(groupNb):
         prono = [groups[groupIdx].prono_1, groups[groupIdx].prono_2, groups[groupIdx].prono_3, groups[groupIdx].prono_4]
         rank  = [groups[groupIdx].rank_1 , groups[groupIdx].rank_2 , groups[groupIdx].rank_3 , groups[groupIdx].rank_4 ]
         if isValid(prono) and isValid(rank):
-            points[groupIdx] = 6
+            points[groupIdx] = rank_score*rank_factor_score
             for team1Idx in range(4):
                 for team2Idx in range(team1Idx+1, 4):
                     inferiorAndWrong = rank[team1Idx] > rank[team2Idx] and prono[team1Idx] <= prono[team2Idx]
                     superiorAndWrong = rank[team1Idx] < rank[team2Idx] and prono[team1Idx] >= prono[team2Idx]
                     if inferiorAndWrong or superiorAndWrong:
-                        points[groupIdx] -= 1
+                        points[groupIdx] -= rank_factor_score
     return points
 
 
-def computeQualifScores(qualifs):
+def computeQualifScores(qualifs, qualif_score):
     qualifNb = len(qualifs)
     points = [0]*qualifNb
-    for questionIdx in range(qualifNb):
-        prono  = qualifs[questionIdx].prono
-        answer = qualifs[questionIdx].answer
-        questionPoints = 2
+    for qualifIdx in range(qualifNb):
+        prono  = qualifs[qualifIdx].prono
+        answer = qualifs[qualifIdx].answer
         if prono is not None and len(prono) != 0\
             and answer is not None and answer != "None" and len(answer) != 0\
-                and questionPoints is not None:
+                and qualif_score is not None:
             if answer.lower() in prono.lower() or prono.lower() in answer.lower():
-                points[questionIdx] = questionPoints
+                points[qualifIdx] = qualif_score
     return points
 
 
@@ -165,7 +201,11 @@ def detailPoll(request, poll_id):
         prono_1=subquery.values("score_1"),
         prono_2=subquery.values("score_2"),
     )
-    matchScores = computeMatchScores(matchs)
+    matchScores = computeMatchScores(matchs,
+                                    poll.exact_score,
+                                    poll.diff_score,
+                                    poll.win_score,
+                                    poll.minority_score)
 
     subquery = QuestionChoice.objects.filter(question=OuterRef("pk"), user=request.user)
     questions = poll.question_set.all().order_by("pub_date").annotate(
@@ -182,24 +222,24 @@ def detailPoll(request, poll_id):
         prono_3=subquery.values("rank_3"),
         prono_4=subquery.values("rank_4"),
     )
-    groupScores = computeGroupScores(groups)
+    groupScores = computeGroupScores(groups, poll.rank_score, poll.rank_factor_score)
 
     subquery = QualifChoice.objects.filter(qualif=OuterRef("pk"), user=request.user)
     qualifs = poll.qualif_set.all().order_by("pub_date").annotate(
         isfilled=Exists(subquery),
         prono=subquery.values("choice"),
     )
-    qualifScores = computeQualifScores(qualifs)
+    qualifScores = computeQualifScores(qualifs, poll.qualif_score)
 
     return render(
         request,
         "polls/detailPoll.html",
         {
-            "poll": poll,
+            "poll"      : poll,
             "matchs"    : zip(matchs   , matchScores),
             "questions" : zip(questions, questionScores),
             "groups"    : zip(groups   , groupScores),
-            "qualifs"    : zip(qualifs  , qualifScores),
+            "qualifs"   : zip(qualifs  , qualifScores),
             "totalScore": sum(matchScores)+sum(questionScores)+sum(groupScores)+sum(qualifScores),
             "isGroup"   : len(groups) > 0,
             "isQualif"  : len(qualifs) > 0,

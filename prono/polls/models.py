@@ -7,6 +7,16 @@ from datetime import timedelta
 class Poll(models.Model):
     name = models.CharField(max_length=50)
 
+    exact_score    = models.IntegerField(default=5)
+    diff_score     = models.IntegerField(default=3)
+    win_score      = models.IntegerField(default=2)
+    minority_score = models.IntegerField(default=0)
+
+    rank_score  = models.IntegerField(default=6)
+    rank_factor_score  = models.IntegerField(default=1)
+
+    qualif_score = models.IntegerField(default=2)
+
     def __str__(self):
         return self.name
 

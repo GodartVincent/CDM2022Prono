@@ -9,7 +9,19 @@
         <h2 class="poll__title-text">{{"Matchs"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"Score exact : 5 points, bonne différence de buts : 3 points, bon vainqueur : 2 points."}}
+        Hors prolongations et tirs au but. Score exact :
+        {{ poll.exact_score }}
+        points, bonne différence de buts :
+        {{ poll.diff_score }}
+        points, bon vainqueur :
+        {{ poll.win_score }}
+        points
+        {% if poll.minority_score > 0 %}
+          , bonus de
+          {{ poll.minority_score }}
+          points si vous avez le bon vainqueur (ou le nul) et que la majorité s'est trompée
+        {% endif %}
+        .
       </div>
       <div class='matchs'>
         {% for match, point in matchs %}
@@ -26,7 +38,19 @@
         <h2 class="poll__title-text">{{"Classements"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"6 points moins la "}} <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a> {{ " entre le pronostic et la vérité."}}
+        {% if poll.rank_factor_score > 1 %}
+          {{ poll.rank_score }}
+          points moins
+          {{ poll.rank_factor_score }}
+          fois la
+          <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a>
+          entre le pronostic et la vérité.
+        {% else %}
+          {{ poll.rank_score }}
+          points moins la
+          <a class="poll__link" href="https://en.wikipedia.org/wiki/Kendall_tau_distance">Kendall tau distance</a>
+          entre le pronostic et la vérité.
+        {% endif %}
       </div>
       <div class='groups'>
         {% for group, point in groups %}
@@ -43,7 +67,8 @@
         <h2 class="poll__title-text">{{"Qualifications"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"2 points."}}
+        {{ poll.qualif_score }}
+        points.
       </div>
       <div class='qualifs'>
         {% for qualif, point in qualifs %}
@@ -59,7 +84,9 @@
         <h2 class="poll__title-text">{{"Questions"}}</h2>
       </div>
       <div class="poll__point_definition">
-        {{"Les questions ne concernent que la/les "}}{{poll.name}}{{" (sauf la première). Le nombre de points remportés dépend de la question."}}
+        Les questions ne concernent que la/les
+        {{poll.name.lower}}
+        (sauf la première). Le nombre de points remportés dépend de la question.
       </div>
       <div class='questions'>
         {% for question, point in questions %}
