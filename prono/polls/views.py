@@ -87,6 +87,14 @@ def results(request):
                     })
 
 
+def isIn(answer, prono):
+    allAnswers = answer.split("/")
+    for singleAnswer in allAnswers:
+        if singleAnswer in prono or prono in singleAnswer:
+            return True 
+    return False
+
+
 def computeMatchScores(matchs, exact_score, diff_score, win_score, minority_score):
     matchNb = len(matchs)
     points = [0]*matchNb
@@ -143,7 +151,7 @@ def computeQuestionScores(questions):
             and answer is not None and answer != "None" and len(answer) != 0\
                 and questionPoints is not None:
             if pointScoreType is None or len(pointScoreType) == 0 or pointScoreType == "EXACT":
-                if answer.lower() in prono.lower() or prono.lower() in answer.lower():
+                if isIn(answer.lower(), prono.lower()):
                     points[questionIdx] = questionPoints
             elif pointScoreType == "DIFF":
                 points[questionIdx] = questionPoints - min(questionPoints, abs(int(answer) - int(prono)))
