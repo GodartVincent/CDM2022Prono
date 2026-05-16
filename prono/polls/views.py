@@ -13,7 +13,7 @@ from .models import (
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.db.models import Exists, OuterRef
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import numpy as np
 
 
@@ -262,9 +262,13 @@ def detailMatch(request, match_id):
 def pronosticMatch(request, match_id):
     if request.method == "POST":
         match = get_object_or_404(Match, pk=match_id)
+        
+        # Si le match a déjà commencé (bloqué)
         if match.isPronoOver():
-            # Redisplay the match pronosticing form.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Trop tard, le match a commencé !'}, status=400)
             return detailPoll(request, match.poll.pk)
+            
         try:
             matchChoice = match.matchchoice_set.get(user_id=request.user)
         except (KeyError, MatchChoice.DoesNotExist):
@@ -274,24 +278,27 @@ def pronosticMatch(request, match_id):
             scores = request.POST.getlist("score")
             matchChoice.score_1 = int(scores[0])
             matchChoice.score_2 = int(scores[1])
-        except (ValueError):
-            # Redisplay the match pronosticing form.
+        except (ValueError, IndexError):
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Valeur invalide.'}, status=400)
             return detailPoll(request, match.poll.pk)
         else:
             matchChoice.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            #return HttpResponseRedirect(f"/poll/{match.poll.pk}/#match_{match.pk}")
+            # Si c'est une sauvegarde automatique en arrière-plan
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success', 'message': 'Score enregistré !'})
             return HttpResponse('<script>history.back();</script>')
 
 
 def pronosticQuestion(request, question_id):
     if request.method == "POST":
         question = get_object_or_404(Question, pk=question_id)
+        
         if question.isPronoOver():
-            # Redisplay the match pronosticing form.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Trop tard !'}, status=400)
             return detailPoll(request, question.poll.pk)
+            
         try:
             questionChoice = question.questionchoice_set.get(user_id=request.user)
         except (KeyError, QuestionChoice.DoesNotExist):
@@ -299,23 +306,26 @@ def pronosticQuestion(request, question_id):
 
         try:
             questionChoice.choice = request.POST["answer"]
-        except (ValueError):
-            # Redisplay the question pronosticing form.
+        except (ValueError, KeyError):
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Erreur de saisie.'}, status=400)
             return detailPoll(request, question.poll.pk)
         else:
             questionChoice.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success', 'message': 'Réponse enregistrée !'})
             return HttpResponse("<script>history.back();</script>")
 
 
 def pronosticGroup(request, group_id):
     if request.method == "POST":
         group = get_object_or_404(Group, pk=group_id)
+        
         if group.isPronoOver():
-            # Redisplay the match pronosticing form.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Les pronos sont fermés pour ce groupe !'}, status=400)
             return detailPoll(request, group.poll.pk)
+            
         try:
             groupChoice = group.groupchoice_set.get(user_id=request.user)
         except (KeyError, GroupChoice.DoesNotExist):
@@ -327,23 +337,26 @@ def pronosticGroup(request, group_id):
             groupChoice.rank_2 = int(ranks[1])
             groupChoice.rank_3 = int(ranks[2])
             groupChoice.rank_4 = int(ranks[3])
-        except (ValueError):
-            # Redisplay the group pronosticing form.
+        except (ValueError, IndexError):
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Classement invalide.'}, status=400)
             return detailPoll(request, group.poll.pk)
         else:
             groupChoice.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success', 'message': 'Groupe mis à jour !'})
             return HttpResponse("<script>history.back();</script>")
 
 
 def pronosticQualif(request, qualif_id):
     if request.method == "POST":
         qualif = get_object_or_404(Qualif, pk=qualif_id)
+        
         if qualif.isPronoOver():
-            # Redisplay the match pronosticing form.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Trop tard !'}, status=400)
             return detailPoll(request, qualif.poll.pk)
+            
         try:
             qualifChoice = qualif.qualifchoice_set.get(user_id=request.user)
         except (KeyError, QualifChoice.DoesNotExist):
@@ -351,16 +364,16 @@ def pronosticQualif(request, qualif_id):
 
         try:
             qualifChoice.choice = request.POST.getlist("prono")[0]
-        except (ValueError):
-            # Redisplay the qualif pronosticing form.
+        except (ValueError, IndexError):
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Erreur.'}, status=400)
             return detailPoll(request, qualif.poll.pk)
         else:
             qualifChoice.save()
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success', 'message': 'Qualification enregistrée !'})
             return HttpResponse("<script>history.back();</script>")
-
+        
 
 # def results(_, match_id):
 #     response = "Vous regardez les résultats du match %s."
