@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "polls.apps.PollsConfig",
     "accounts",
-    "livereload",
     'fontawesomefree'
 ]
 
@@ -57,8 +56,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "livereload.middleware.LiveReloadScript",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware"
 ]
 
 
@@ -102,6 +100,10 @@ elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
 
+# Add livereload in development mode only to avoid unnecessary overhead in production
+if DEVELOPMENT_MODE is True:
+    INSTALLED_APPS.append('livereload')
+    MIDDLEWARE.append('livereload.middleware.LiveReloadScript')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
