@@ -58,6 +58,37 @@
     <div class="content">
       {% block content %}{% endblock %}
     </div>
+    <script>
+      // On cible tous les inputs et les menus déroulants de la page
+      document.querySelectorAll('form input, form select').forEach(element => {
+          
+          // Dès que la valeur change (on tape un chiffre ou on choisit un menu)
+          element.addEventListener('change', function() {
+              const form = this.closest('form');
+              
+              // On envoie les données à Django en arrière-plan
+              fetch(form.action, {
+                  method: 'POST',
+                  body: new FormData(form),
+                  headers: {
+                      'X-Requested-With': 'XMLHttpRequest'
+                  }
+              }).then(response => {
+                  if(response.ok) {
+                      // EFFET VISUEL : On flashe la case en vert clair pour rassurer l'utilisateur
+                      const originalColor = this.style.backgroundColor;
+                      this.style.backgroundColor = '#d4edda';
+                      this.style.transition = 'background-color 0.5s';
+                      
+                      // On remet la couleur normale après 1 seconde
+                      setTimeout(() => { 
+                          this.style.backgroundColor = originalColor; 
+                      }, 1000);
+                  }
+              });
+          });
+      });
+    </script>
   </body>
 
 </html>
