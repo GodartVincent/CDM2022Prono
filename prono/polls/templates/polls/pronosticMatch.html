@@ -58,14 +58,15 @@
             {{ match.squad_2 }}
           </div>
         </div>
-        <div class="submitbutton">
-          <button type="submit" class="button">
-            {% if match.isfilled %}Mettre à jour
-            {% else %}
-              Valider
-            {% endif %}
-          </button>
-        </div>
+      </div>
+      <div class="submitbutton">
+        <button type="submit" class="button">
+          {% if match.isfilled %}Mettre à jour
+          {% else %}
+            Valider
+          {% endif %}
+        </button>
+      </div>
       </form>
     {% endif %}
     {% if match.score_1 >= 0 and match.score_2 >= 0 %}
