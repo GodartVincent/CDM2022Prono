@@ -97,46 +97,89 @@ def isIn(answer, prono):
 
 def computeMatchScores(matchs, exact_score, diff_score, win_score, minority_score):
     matchNb = len(matchs)
-    points = [0]*matchNb
-    for matchIdx in range(matchNb):
-        win_nb = 0
-        equal_nb = 0
-        loss_nb = 0
-        all_prono = MatchChoice.objects.filter(match=matchs[matchIdx])
-        for prono in all_prono:
-            diff = prono.score_1 - prono.score_2
-            win_nb += diff > 0
-            equal_nb += diff == 0
-            loss_nb += diff < 0
-        is_win_major = win_nb >= equal_nb and win_nb >= loss_nb
-        is_equal_major = equal_nb >= win_nb and equal_nb >= loss_nb
-        is_loss_major = loss_nb >= equal_nb and loss_nb >= win_nb
+    points = [0.0] * matchNb  # On utilise des Float pour les cotes
 
+    for matchIdx in range(matchNb):
         prono_1 = matchs[matchIdx].prono_1
         prono_2 = matchs[matchIdx].prono_2
         score_1 = matchs[matchIdx].score_1
         score_2 = matchs[matchIdx].score_2
-        is_prono_correct = False
-        if prono_1 is not None and prono_1 != -1 and score_1 != -1\
+
+        # Si le match est termine et que l'utilisateur a fait un prono
+        if prono_1 is not None and prono_1 != -1 and score_1 != -1 \
             and prono_2 is not None and prono_2 != -1 and score_2 != -1:
+
             prono_delta = prono_1 - prono_2
-            if prono_1 == score_1 and prono_2 == score_2:
-                is_prono_correct = True
-                points[matchIdx] = exact_score
-            elif prono_delta == score_1 - score_2:
-                is_prono_correct = True
-                points[matchIdx] = diff_score
-            elif np.sign(prono_delta) == np.sign(score_1 - score_2):
-                is_prono_correct = True
-                points[matchIdx] = win_score
-            if is_prono_correct:
-                if prono_delta > 0 and not is_win_major:
-                    points[matchIdx] += minority_score
-                elif prono_delta == 0 and not is_equal_major:
-                    points[matchIdx] += minority_score
-                elif prono_delta < 0 and not is_loss_major:
-                    points[matchIdx] += minority_score
+            score_delta = score_1 - score_2
+
+            # 1. Quelle est l'issue réelle du match et quelle cote s'applique ?
+            if score_delta > 0:
+                cote_gagnee = matchs[matchIdx].cote_1
+            elif score_delta == 0:
+                cote_gagnee = matchs[matchIdx].cote_N
+            else:
+                cote_gagnee = matchs[matchIdx].cote_2
+
+            # 2. Le joueur a-t-il trouve la bonne issue (bon vainqueur ou bon nul) ?
+            if np.sign(prono_delta) == np.sign(score_delta):
+                
+                # S'il a le score exact
+                if prono_1 == score_1 and prono_2 == score_2:
+                    points[matchIdx] = cote_gagnee * 2.0
+                
+                # S'il a la bonne difference de buts
+                elif prono_delta == score_delta:
+                    points[matchIdx] = cote_gagnee * 1.5
+                
+                # S'il a juste la bonne issue
+                else:
+                    points[matchIdx] = cote_gagnee
+
     return points
+
+
+# def computeMatchScores(matchs, exact_score, diff_score, win_score, minority_score):
+#     matchNb = len(matchs)
+#     points = [0]*matchNb
+#     for matchIdx in range(matchNb):
+#         win_nb = 0
+#         equal_nb = 0
+#         loss_nb = 0
+#         all_prono = MatchChoice.objects.filter(match=matchs[matchIdx])
+#         for prono in all_prono:
+#             diff = prono.score_1 - prono.score_2
+#             win_nb += diff > 0
+#             equal_nb += diff == 0
+#             loss_nb += diff < 0
+#         is_win_major = win_nb >= equal_nb and win_nb >= loss_nb
+#         is_equal_major = equal_nb >= win_nb and equal_nb >= loss_nb
+#         is_loss_major = loss_nb >= equal_nb and loss_nb >= win_nb
+
+#         prono_1 = matchs[matchIdx].prono_1
+#         prono_2 = matchs[matchIdx].prono_2
+#         score_1 = matchs[matchIdx].score_1
+#         score_2 = matchs[matchIdx].score_2
+#         is_prono_correct = False
+#         if prono_1 is not None and prono_1 != -1 and score_1 != -1\
+#             and prono_2 is not None and prono_2 != -1 and score_2 != -1:
+#             prono_delta = prono_1 - prono_2
+#             if prono_1 == score_1 and prono_2 == score_2:
+#                 is_prono_correct = True
+#                 points[matchIdx] = exact_score
+#             elif prono_delta == score_1 - score_2:
+#                 is_prono_correct = True
+#                 points[matchIdx] = diff_score
+#             elif np.sign(prono_delta) == np.sign(score_1 - score_2):
+#                 is_prono_correct = True
+#                 points[matchIdx] = win_score
+#             if is_prono_correct:
+#                 if prono_delta > 0 and not is_win_major:
+#                     points[matchIdx] += minority_score
+#                 elif prono_delta == 0 and not is_equal_major:
+#                     points[matchIdx] += minority_score
+#                 elif prono_delta < 0 and not is_loss_major:
+#                     points[matchIdx] += minority_score
+#     return points
 
 
 def computeQuestionScores(questions):
@@ -222,7 +265,7 @@ def detailPoll(request, poll_id):
     questionScores = computeQuestionScores(questions)
 
     subquery = GroupChoice.objects.filter(group=OuterRef("pk"), user=request.user)
-    groups = poll.group_set.all().order_by("pub_date").annotate(
+    groups = poll.group_set.all().order_by("group_name").annotate(
         isfilled=Exists(subquery),
         prono_1=subquery.values("rank_1"),
         prono_2=subquery.values("rank_2"),

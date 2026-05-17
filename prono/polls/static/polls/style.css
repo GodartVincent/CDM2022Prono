@@ -382,57 +382,141 @@ input.question__choice {
 }
 
 /* ==================================================== */
+/* INTERFACE DES MATCHS STYLE CARD ET GRILLE DE COTES   */
 /* ==================================================== */
 
 .matchs {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* L'encadre principal de chaque match (Style Carte blanche) */
+.match {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb; /* Bordure subtile de l'encadre */
+  border-radius: 0.75rem; /* Coins arrondis elegants */
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -1px rgb(0 0 0 / 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Grille magique a 3 colonnes : Gauche (1fr) | Milieu (auto) | Droite (1fr) */
+.match__teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.match__form {
+  width: 100%;
+}
+
+/* Alignements symetriques pour forcer le centrage par rapport au milieu */
+.match__team {
+  display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
-.match {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+.match__team--left {
+  justify-content: flex-end; /* Colle les elements vers le centre */
 }
 
-.match__teams {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.match__team {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
+.match__team--right {
+  justify-content: flex-start; /* Colle les elements vers le centre */
 }
 
 .match__team-name {
-  font-size: 1.125em;
-  width : 150px;
-  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  width: 140px;
 }
 
-.match__score {
-  width: 80px;
+.match__team-name--left {
+  text-align: right;
+}
+
+.match__team-name--right {
+  text-align: left;
+}
+
+/* Le bloc du milieu */
+.opposing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+}
+
+.opposing__dash {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+/* ==================================================== */
+/* SURBRILLANCE DU GAGNANT                              */
+/* ==================================================== */
+
+.is-winner {
+  font-weight: 800 !important;
+  color: #111827 !important; /* Un noir tres intense */
+}
+
+/* Force egalement la cote associee a passer en gras sombre */
+.is-winner .match__odds,
+.is-winner .match__odds-draw {
+  font-weight: 800 !important;
+  color: #111827 !important;
+}
+
+/* Style unifie et harmonise pour toutes les cotes */
+.match__odds, 
+.match__odds-draw {
+  font-size: 0.85rem !important; /* Taille bloquee identique partout */
+  color: #6b7280; /* Gris pro uniforme */
+  font-weight: 600;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.match__score, 
+.match__input {
+  width: 70px;
   text-align: center;
 }
 
 .match__score-input {
-  width: 80px;
+  width: 65px;
+  height: 38px;
   text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #f9fafb;
 }
 
 .match__result {
   font-style: italic;
-  color: green;
-  text-align: center;
+  color: #10b981;
+  display: block;
+  font-size: 0.9rem;
 }
 
 .match__points {
-  font-style: italic;
-  color: green;
+  text-align: center;
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #059669;
 }
 
 /* ==================================================== */
@@ -523,4 +607,218 @@ th {
 
 form .button {
     display: none;
+}
+
+.match__odds {
+  font-size: 0.85rem;
+  color: #6b7280; /* Un gris elegant */
+  font-weight: 500;
+  margin-top: 0.2rem;
+  font-style: italic;
+}
+
+.opposing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px; /* Donne un peu d'espace pour afficher la cote proprement */
+  font-weight: bold;
+}
+
+/* ==================================================== */
+/* HARMONISATION DES CARTES (QUESTIONS, GROUPES, QUALIFS)*/
+/* ==================================================== */
+
+/* Transformation des blocs en belles cartes blanches */
+.question, .qualif, .group-card-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -1px rgb(0 0 0 / 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Pour les qualifications qui s'affichent en grille */
+.qualif {
+  width: 31% !important; /* Legerement elargi pour le confort sur desktop */
+  min-width: 250px;
+}
+
+/* Titres des sections dans les cartes */
+.question__title, .group__string, .qualif__string {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--main-bg-color-700);
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.question__title {
+  color: var(--main-text-color);
+}
+
+/* Amelioration des champs de saisie de texte (Questions) */
+input.question__choice {
+  width: 100% !important;
+  max-width: 100%;
+  height: 40px;
+  padding: 0 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #f9fafb;
+  font-size: 1rem;
+}
+
+/* Alignement aligne et propre pour les lignes de classement (Groupes) */
+.group__team, .qualif__choice, .qualif__input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Les badges d'equipes */
+.group__squad, .qualif__squad {
+  flex: 1;
+  width: auto !important;
+  height: 38px !important;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.375rem;
+  background-color: #f3f4f6 !important;
+  font-size: 0.95rem !important;
+  font-weight: 500;
+}
+
+/* Inputs numeriques de classement */
+.group__team input[type="number"] {
+  width: 55px;
+  height: 38px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #f9fafb;
+}
+
+/* Uniformisation de l'affichage des points et des resultats */
+.question__result, .group__result, .qualif__result, .question__content {
+  text-align: center;
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #059669;
+  font-style: normal !important;
+  font-weight: 600;
+  width: 100% !important;
+}
+
+/* Cacher proprement tous les boutons de validation devenus inutiles */
+.question__actions, .group__submit, .qualif__submit, .question .submitbutton {
+  display: none !important;
+}
+
+/* ==================================================== */
+/* DESIGN DU COMPOSANT DES GROUPES                     */
+/* ==================================================== */
+
+/* En-tête generique pour toutes les cartes (Groupes, Matchs, Questions) */
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+/* Cas particulier pour les matchs : on enleve la ligne car il n'y a pas de titre a gauche */
+.match .card__header {
+  justify-content: flex-end;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* On nettoie les anciennes bordures des titres pour eviter les doublons */
+.question__title, 
+.group-card-wrapper .group__string, 
+.qualif__string {
+  border-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--main-bg-color-700);
+}
+
+/* On nettoie les anciennes bordures pour eviter les doublons */
+.group-card-wrapper .group__string {
+  border-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Style global des petits badges d'etat */
+.badge {
+  font-size: 0.725rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Badge : Termine (Gris) */
+.badge--expired {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Badge : Tout est rempli, on peut modifier (Bleu rassurant) */
+.badge--editable {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+/* Badge : Action requise ! (Orange/Rouge) */
+.badge--missing {
+  background-color: #ffedd5;
+  color: #c2410c;
+  animation: pulse-badge 2s infinite; /* Petite animation optionnelle pour attirer l'œil */
+}
+
+/* Animation douce pour le badge "A remplir" */
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Style applique aux cartes fermees */
+.card--expired {
+  background-color: #f9fafb !important; /* Fond subtilement grise */
+  border-color: #e5e7eb !important;
+  opacity: 0.9; /* Legere attenuation globale */
+}
+
+/* Affichage textuel des pronostics valides */
+.group__rank-display {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+/* Mise en valeur du resultat reel officiel */
+.group__real-result {
+  color: #10b981; /* Le meme vert que les resultats des matchs */
+  font-weight: 700;
+  margin-left: 0.5rem;
 }

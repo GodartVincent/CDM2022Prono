@@ -26,6 +26,12 @@ class Match(models.Model):
     squad_2 = models.CharField(max_length=20)
     score_1 = models.IntegerField(default=-1)
     score_2 = models.IntegerField(default=-1)
+
+    # Cotes for each possible outcome (1, N, 2)
+    cote_1 = models.FloatField(default=10.0)
+    cote_N = models.FloatField(default=10.0)
+    cote_2 = models.FloatField(default=10.0)
+
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=True)
     pub_date = models.DateTimeField("date published")
 
@@ -56,7 +62,7 @@ class MatchChoice(models.Model):
     def __str__(self):
         if self.score_1 != -1 and self.score_2 != -1:
             return str(self.score_1) + " - " + str(self.score_2)
-        return "Pas encore pronostiqué."
+        return "Pas encore pronostique."
 
 
 class Pronostic(models.Model):
@@ -125,7 +131,7 @@ class QualifChoice(models.Model):
     def __str__(self):
         if self.choice != "None":
             return str(self.choice)
-        return "Pas encore pronostiqué."
+        return "Pas encore pronostique."
 
 
 class Group(models.Model):
@@ -146,6 +152,21 @@ class Group(models.Model):
 
     def isPronoOver(self):
         return self.pub_date - timezone.now() < timedelta(minutes=10)
+    
+    def get_ordered_teams(self):
+        # On cree une liste des 4 equipes avec leurs pronos et rangs
+        teams = [
+            {'squad': self.squad_1, 'prono': getattr(self, 'prono_1', ''), 'rank': getattr(self, 'rank_1', -1)},
+            {'squad': self.squad_2, 'prono': getattr(self, 'prono_2', ''), 'rank': getattr(self, 'rank_2', -1)},
+            {'squad': self.squad_3, 'prono': getattr(self, 'prono_3', ''), 'rank': getattr(self, 'rank_3', -1)},
+            {'squad': self.squad_4, 'prono': getattr(self, 'prono_4', ''), 'rank': getattr(self, 'rank_4', -1)},
+        ]
+        
+        # Si le groupe est ferme, on trie la liste par rang reel croissant (1, 2, 3, 4)
+        if self.isPronoOver():
+            teams.sort(key=lambda t: t['rank'] if t['rank'] is not None and t['rank'] > 0 else 99)
+            
+        return teams
 
     def __str__(self):
         return self.group_name
@@ -166,4 +187,4 @@ class GroupChoice(models.Model):
     def __str__(self):
         if self.rank_1 != -1 and self.rank_2 != -1 and self.rank_3 != -1 and self.rank_4 != -1:
             return str(self.rank_1) + ", " + str(self.rank_2) + ", " + str(self.rank_3) + ", " + str(self.rank_4)
-        return "Pas encore pronostiqué."
+        return "Pas encore pronostique."

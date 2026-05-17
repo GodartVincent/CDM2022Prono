@@ -59,33 +59,50 @@
       {% block content %}{% endblock %}
     </div>
     <script>
-      // On cible tous les inputs et les menus déroulants de la page
-      document.querySelectorAll('form input, form select').forEach(element => {
+      // On cible directement les formulaires plutôt que chaque champ
+      document.querySelectorAll('form').forEach(form => {
           
-          // Dès que la valeur change (on tape un chiffre ou on choisit un menu)
-          element.addEventListener('change', function() {
-              const form = this.closest('form');
+          let timeout; // C'est ici que réside la magie du Debounce
+
+          // On écoute tout changement à l'intérieur du formulaire
+          form.addEventListener('change', function(event) {
               
-              // On envoie les données à Django en arrière-plan
-              fetch(form.action, {
-                  method: 'POST',
-                  body: new FormData(form),
-                  headers: {
-                      'X-Requested-With': 'XMLHttpRequest'
-                  }
-              }).then(response => {
-                  if(response.ok) {
-                      // EFFET VISUEL : On flashe la case en vert clair pour rassurer l'utilisateur
-                      const originalColor = this.style.backgroundColor;
-                      this.style.backgroundColor = '#d4edda';
-                      this.style.transition = 'background-color 0.5s';
-                      
-                      // On remet la couleur normale après 1 seconde
-                      setTimeout(() => { 
-                          this.style.backgroundColor = originalColor; 
-                      }, 1000);
-                  }
-              });
+              // On annule l'envoi précédent s'il y en avait un en attente
+              clearTimeout(timeout);
+              
+              // On attend 500 millisecondes (0.5s) de calme plat avant d'envoyer
+              timeout = setTimeout(() => {
+                  fetch(form.action, {
+                      method: 'POST',
+                      body: new FormData(form),
+                      headers: {
+                          'X-Requested-With': 'XMLHttpRequest'
+                      }
+                  }).then(response => {
+                      if(response.ok) {
+                          const inputElement = event.target; // Le champ qu'on vient de modifier
+
+                          // 1. EFFET VISUEL : Flash vert
+                          const originalColor = inputElement.style.backgroundColor;
+                          inputElement.style.backgroundColor = '#d4edda';
+                          inputElement.style.transition = 'background-color 0.5s';
+                          setTimeout(() => { 
+                              inputElement.style.backgroundColor = originalColor; 
+                          }, 1000);
+
+                          // 2. MISE À JOUR DU BADGE
+                          const card = form.closest('.match, .question, .group-card-wrapper, .qualif');
+                          if (card) {
+                              const badge = card.querySelector('.badge');
+                              if (badge && badge.classList.contains('badge--missing')) {
+                                  badge.classList.remove('badge--missing');
+                                  badge.classList.add('badge--editable');
+                                  badge.textContent = 'Modifiable';
+                              }
+                          }
+                      }
+                  });
+              }, 500); // 500 ms de délai
           });
       });
     </script>

@@ -1,36 +1,36 @@
-<div class="question">
-  <div class="question__string">
-    {{forloop.counter}}
-    -
-    {{ question }}
+<div class="question {% if question.isPronoOver %}card--expired{% endif %}" id="question_{{question.id}}">
+  
+  <div class="card__header">
+    <div class="question__title">{{ question.question_text }}</div>
+    
+    {% if question.isPronoOver %}
+      <span class="badge badge--expired">Fermé</span>
+    {% elif question.isfilled %}
+      <span class="badge badge--editable">Modifiable</span>
+    {% else %}
+      <span class="badge badge--missing">À répondre</span>
+    {% endif %}
   </div>
-  <div class="question__content">
-    <div class="question__actions">
-      {% if question.isPronoOver %}
-        {{ question.prono }}
-      {% elif question.isfilled %}
-        <form action="{% url 'polls:pronosticQuestion' question.id %}" class="question__form" method="post">
-          {% csrf_token %}
-          <input type="text" name="answer" class="question__choice" value="{{ question.prono }}" required="required">
-          <button type="submit" class="button">Mettre à jour</button>
-        </form>
-      {% else %}
-        <form action="{% url 'polls:pronosticQuestion' question.id %}" class="question__form" method="post">
-          {% csrf_token %}
-          <input type="text" name="answer" class="question__choice" required="required">
-          <button type="submit" class="button">Valider</button>
-        </form>
+  
+  {% if question.isPronoOver %}
+    <div class="question__content">
+      <strong>{{ question.prono }}</strong>
+      {% if question.answer %}
+        <span style="display:block; color:#4b5563; font-weight:normal; font-size:0.85rem; margin-top:0.25rem;">
+          Réponse officielle : {{ question.answer }}
+        </span>
       {% endif %}
     </div>
+  {% else %}
+    <form action="{% url 'polls:pronosticQuestion' question.id %}" name="question{{ forloop.counter }}" method="post" class="question__form">
+      {% csrf_token %}
+      <input type="text" name="answer" value="{{ question.prono }}" class="question__choice" placeholder="Votre réponse..." required="required"/>
+    </form>
+  {% endif %}
 
-    {% if question.isPronoOver and question.answer != 'None' %}
-      <div class="question__result">
-        {{ question.answer }}
-        -
-        {{ point }}
-        point(s)
-      </div>
-    {% endif %}
-
-  </div>
+  {% if question.points_earned >= 0 %}
+    <div class="question__result">
+      Points gagnés : {{ question.points_earned }}
+    </div>
+  {% endif %}
 </div>

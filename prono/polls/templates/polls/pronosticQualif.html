@@ -1,46 +1,32 @@
-<div class="qualif">
-  <div class="qualif__string">
-    {{ qualif }}
-  </div>
-    {% if qualif.isPronoOver%}
+<div class="qualif" id="qualif_{{qualif.id}}">
+  <div class="qualif__string">{{ qualif.string }}</div>
+  
+  <form action="{% url 'polls:pronosticQualif' qualif.id %}" name="qualif{{ forloop.counter }}" method="post" class="qualif__form">
+    {% csrf_token %}
+    
+    {% if qualif.isPronoOver %}
       <div class="qualif__choice">
-        {{ qualif.prono }}
+        <div class="qualif__squad">Prono : {{ qualif.prono }}</div>
       </div>
     {% else %}
-      <div class="qualif__form">
-        <form action="{% url 'polls:pronosticQualif' qualif.id %}" name="qualif{{ forloop.counter }}" method="post">
-          {% csrf_token %}
-          <div class="qualif__team">
-            <div class="qualif__input">
-              <select name="prono" id="qualif" required="required">
-                <option value="{{qualif.squad_1}}" {% if qualif.prono == qualif.squad_1 %} selected="selected" {% endif %}>{{qualif.squad_1}}</option>
-                <option value="{{qualif.squad_2}}" {% if qualif.prono == qualif.squad_2 %} selected="selected" {% endif %}>{{qualif.squad_2}}</option>
-              </select>
-            </div>
-          </div>
-        <div class="qualif__submit">
-          <button type="submit" class="button">
-            {% if qualif.isfilled %}Mettre à jour
-            {% else %}
-              Valider
-            {% endif %}
-          </button>
-        </div>
-      </form>
+      <div class="qualif__input">
+        <label class="qualif__squad" style="cursor: pointer;">
+          <input type="radio" name="prono" value="{{ qualif.squad_1 }}" {% if qualif.prono == qualif.squad_1 %}checked{% endif %} style="margin-right: 0.5rem; width:auto; height:auto;"/>
+          {{ qualif.squad_1 }}
+        </label>
+      </div>
+      <div class="qualif__input">
+        <label class="qualif__squad" style="cursor: pointer;">
+          <input type="radio" name="prono" value="{{ qualif.squad_2 }}" {% if qualif.prono == qualif.squad_2 %}checked{% endif %} style="margin-right: 0.5rem; width:auto; height:auto;"/>
+          {{ qualif.squad_2 }}
+        </label>
       </div>
     {% endif %}
+  </form>
 
-  {% if qualif.answer != "None" %}
+  {% if qualif.points_earned >= 0 %}
     <div class="qualif__result">
-      {{"Réponse : " }}
-      {{ qualif.answer }}
-      {% if qualif.isfilled %}
-        <div class="points">
-          {{ "Point(s) : "}}
-          {{ point }}
-        </div>
-      {% endif %}
+      Points gagnés : {{ qualif.points_earned }}
     </div>
   {% endif %}
-
 </div>

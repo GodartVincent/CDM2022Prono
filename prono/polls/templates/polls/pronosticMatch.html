@@ -1,79 +1,93 @@
-<div class="match" id="match_{{match.id}}">
+<div class="match {% if match.isPronoOver %}card--expired{% endif %}" id="match_{{match.id}}">
+  
+  <div class="card__header">
+    {% if match.isPronoOver %}
+      <span class="badge badge--expired">Fermé</span>
+    {% elif match.isfilled %}
+      <span class="badge badge--editable">Modifiable</span>
+    {% else %}
+      <span class="badge badge--missing">À remplir</span>
+    {% endif %}
+  </div>
+
   {% if match.isPronoOver %}
     <div class="match__teams">
-      <div class="match__team">
-        <div class="match__team-name">
+      
+      <div class="match__team match__team--left">
+        <div class="match__team-name match__team-name--left {% if match.score_1 > match.score_2 and match.score_1 >= 0 %}is-winner{% endif %}">
           {{ match.squad_1 }}
+          <div class="match__odds">Cote : {{ match.cote_1 }}</div>
         </div>
         <div class="match__score">
           {% if match.isfilled %}{{ match.prono_1 }}
-          {% else %}
-            X
-          {% endif %}
+          {% else %}X{% endif %}
           {% if match.score_1 >= 0 %}
-            <span class="match__result">
-              ({{ match.score_1}})</span>
+            <span class="match__result">({{ match.score_1}})</span>
           {% endif %}
         </div>
       </div>
-      <div class="opposing">
-        {{" - " }}
+
+      <div class="opposing {% if match.score_1 == match.score_2 and match.score_1 >= 0 %}is-winner{% endif %}">
+        <div class="opposing__dash">-</div>
+        <div class="match__odds-draw">Nul : {{ match.cote_N }}</div>
       </div>
-      <div class="match__team">
+
+      <div class="match__team match__team--right">
         <div class="match__score">
           {% if match.isfilled %}{{ match.prono_2 }}
-          {% else %}
-            X
-          {% endif %}
+          {% else %}X{% endif %}
           {% if match.score_2 >= 0 %}
-            <span class="match__result">
-              ({{ match.score_2}})</span>
+            <span class="match__result">({{ match.score_2}})</span>
           {% endif %}
         </div>
-        <div class="match__team-name">
+        <div class="match__team-name match__team-name--right {% if match.score_1 < match.score_2 and match.score_1 >= 0 %}is-winner{% endif %}">
           {{ match.squad_2 }}
+          <div class="match__odds">Cote : {{ match.cote_2 }}</div>
         </div>
       </div>
+      
     </div>
   {% else %}
-    <form action="{% url 'polls:pronosticMatch' match.id %}" name="match{{ forloop.counter }}" method="post">
+    <form action="{% url 'polls:pronosticMatch' match.id %}" name="match{{ forloop.counter }}" method="post" class="match__form">
       {% csrf_token %}
       <div class="match__teams">
-        <div class="match__team">
-          <div class="match__team-name">
+        <div class="match__team match__team--left">
+          <div class="match__team-name match__team-name--left">
             {{ match.squad_1 }}
+            <div class="match__odds">Cote : {{ match.cote_1 }}</div>
           </div>
           <div class="match__input">
             <input type="number" name="score" id="choice" value="{{ match.prono_1 }}" class="match__score-input" min="0" required="required"/>
           </div>
         </div>
+
         <div class="opposing">
-          {{" - " }}
+          <div class="opposing__dash">-</div>
+          <div class="match__odds-draw">Nul : {{ match.cote_N }}</div>
         </div>
-        <div class="match__team">
+
+        <div class="match__team match__team--right">
           <div class="match__input">
             <input type="number" name="score" id="choice" value="{{ match.prono_2 }}" class="match__score-input" min="0" required="required"/>
           </div>
-          <div class="match__team-name">
+          <div class="match__team-name match__team-name--right">
             {{ match.squad_2 }}
+            <div class="match__odds">Cote : {{ match.cote_2 }}</div>
           </div>
         </div>
       </div>
+      
       <div class="submitbutton">
         <button type="submit" class="button">
-          {% if match.isfilled %}Mettre à jour
-          {% else %}
-            Valider
-          {% endif %}
+          {% if match.isfilled %}Mettre à jour{% else %}Valider{% endif %}
         </button>
       </div>
-      </form>
-    {% endif %}
-    {% if match.score_1 >= 0 and match.score_2 >= 0 %}
-      <div class="match__points">
-        {{ "Point(s) : "}}
-        {{ point }}
-      </div>
-    {% endif %}
-
-  </div>
+    </form>
+  {% endif %}
+  
+  {% if match.score_1 >= 0 and match.score_2 >= 0 %}
+    <div class="match__points">
+      Points gagnés : <strong>{{ point }}</strong>
+    </div>
+  {% endif %}
+</div>
